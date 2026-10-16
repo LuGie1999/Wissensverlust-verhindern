@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Das Wissenshaus</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: Bauplan-Ästhetik – Startseite mit klickbarem Hausquerschnitt, darunter Kapitelseiten im gleichen Raster */
+:root{
+  --bg:#EEF2F0; --paper:#F8FAF9; --ink:#14303A; --muted:#506870; --line:#C9D5D3;
+  --accent:#D6941C; --accent-soft:#F4E3C1;
+  --c-kultur:#4E6B5C; --c-abh:#2F5D7C; --c-doku:#6A4F7A; --c-rout:#B4612F;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1E23; --paper:#152A31; --ink:#E3ECEA; --muted:#97AEB0; --line:#2A4249;
+  --accent:#E8AE45; --accent-soft:#3A3020;
+  --c-kultur:#7FA690; --c-abh:#6FA3C7; --c-doku:#A98BBB; --c-rout:#DB8C5A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1E23; --paper:#152A31; --ink:#E3ECEA; --muted:#97AEB0; --line:#2A4249;
+  --accent:#E8AE45; --accent-soft:#3A3020;
+  --c-kultur:#7FA690; --c-abh:#6FA3C7; --c-doku:#A98BBB; --c-rout:#DB8C5A; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.02rem;line-height:1.6;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:32px 32px;background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:16px;padding-block:10px}
+.brand{font-family:var(--display);font-weight:800;font-size:1.1rem;letter-spacing:-.01em;white-space:nowrap;background:none;border:0;color:var(--ink);cursor:pointer;padding:0}
+.brand span{color:var(--accent)}
+nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;min-width:0}
+nav::-webkit-scrollbar{display:none}
+nav button{font:500 .78rem var(--mono);letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;
+  background:none;border:1px solid transparent;color:var(--muted);padding:6px 10px;border-radius:4px;cursor:pointer}
+nav button:hover{color:var(--ink);border-color:var(--line)}
+nav button[aria-current="page"]{color:var(--ink);border-color:var(--ink)}
+button:focus-visible,.zone:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+main{padding-block:32px 64px}
+.view{display:flex;flex-direction:column;gap:28px}
+.label{font:500 .74rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1}
+h1{font-size:clamp(2.1rem,6vw,3.6rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(1.5rem,3.5vw,2.1rem);font-weight:700;letter-spacing:-.01em}
+h3{font-size:1.12rem;font-weight:700}
+p{margin:0;max-width:65ch}
+.lead{font-size:1.15rem;color:var(--muted)}
+
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:24px}
+.hero{display:grid;grid-template-columns:1fr 1.05fr;gap:32px;align-items:center}
+.hero > *{min-width:0}
+.case{border-left:3px solid var(--accent);padding:4px 0 4px 16px;display:flex;flex-direction:column;gap:6px}
+.case strong{font-family:var(--display)}
+
+/* Haus */
+.house svg{width:100%;height:auto;display:block}
+.zone{cursor:pointer}
+.zone .fill{transition:opacity .2s}
+.zone:hover .fill,.zone:focus .fill{opacity:.85}
+.zone text{pointer-events:none}
+.legend{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
+.legend button{display:flex;align-items:center;gap:8px;text-align:left;background:none;border:1px solid var(--line);border-radius:4px;padding:8px 10px;color:var(--ink);font:400 .88rem var(--body);cursor:pointer}
+.legend button:hover{border-color:var(--ink)}
+.dot{width:12px;height:12px;border-radius:2px;flex:none}
+
+.grid4{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid4 > *,.grid3 > *{min-width:0}
+.tile{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:8px;text-align:left;color:var(--ink);font:inherit;cursor:pointer;border-top:4px solid var(--tc)}
+.tile:hover{border-color:var(--ink);border-top-color:var(--tc)}
+.tile .q{color:var(--muted);font-size:.93rem}
+
+/* Kapitel */
+.chap-head{display:flex;flex-direction:column;gap:12px;padding-bottom:20px;border-bottom:2px solid var(--tc)}
+.part{display:inline-flex;align-items:center;gap:8px}
+.part .dot{background:var(--tc)}
+.question{font-family:var(--display);font-size:1.2rem;font-weight:500;color:var(--tc);max-width:60ch}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cols > *{min-width:0}
+ul.plain{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+ul.plain li{padding-left:20px;position:relative}
+ul.plain li::before{content:"";position:absolute;left:0;top:.6em;width:9px;height:9px;border:2px solid var(--tc,var(--accent));border-radius:2px}
+.measures{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.measure{border:1px solid var(--line);border-radius:6px;padding:16px;background:var(--paper);display:flex;flex-direction:column;gap:6px;min-width:0}
+.measure p{font-size:.95rem;color:var(--muted)}
+.placeholder{border:2px dashed var(--accent);background:var(--accent-soft);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.placeholder .label{color:var(--ink)}
+.owner{font:500 .8rem var(--mono);color:var(--muted)}
+
+.check{display:flex;flex-direction:column;gap:8px}
+.check label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;padding:8px 10px;border-radius:4px;border:1px solid var(--line);background:var(--paper)}
+.check input{margin-top:5px;accent-color:var(--accent);flex:none;width:16px;height:16px}
+.check label:has(input:checked) span{text-decoration:line-through;color:var(--muted)}
+.progress{font:500 .8rem var(--mono);color:var(--muted)}
+
+.pager{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.btn{font:700 .95rem var(--body);background:var(--ink);color:var(--paper);border:0;border-radius:4px;padding:10px 16px;cursor:pointer}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--ink)}
+
+/* Fahrplan */
+.phase{border-top:4px solid var(--ink);display:flex;flex-direction:column;gap:12px}
+.phase .when{font-family:var(--display);font-size:1.4rem;font-weight:800}
+.tag{display:inline-block;font:500 .7rem var(--mono);letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:3px;color:var(--paper);background:var(--tc);margin-right:4px}
+.phase li{font-size:.95rem}
+
+footer{padding-block:24px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);background:var(--paper)}
+
+@media (max-width:760px){
+  .hero,.cols,.grid3,.grid4,.measures{grid-template-columns:1fr}
+  .bar{flex-direction:column;align-items:flex-start;gap:6px}
+  nav{width:100%}
+  .sheet{padding:18px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <button class="brand" data-go="start">Wissens<span>haus</span></button>
+    <nav aria-label="Kapitel">
+      <button data-go="start">Start</button>
+      <button data-go="kultur">Kultur</button>
+      <button data-go="abh">Abhängigkeiten</button>
+      <button data-go="doku">Dokumentation</button>
+      <button data-go="rout">Routinen</button>
+      <button data-go="fahrplan">Fahrplan</button>
+      <button data-go="notfall">Notfall</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="app">
+
+<!-- START -->
+<section class="view" data-view="start">
+  <div class="hero">
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <span class="label">Konzept · Wissensverlust bei spontanem Mitarbeiterabgang</span>
+      <h1>Wissen, das bleibt, wenn Menschen gehen.</h1>
+      <p class="lead">Ein Konzept in vier Bauteilen. Fehlt eines davon, trägt das Haus nicht.</p>
+      <div class="case">
+        <span class="label">Ausgangsfall</span>
+        <strong>Montag, 7:45 Uhr. Frau Meier meldet sich ab – auf unbestimmte Zeit.</strong>
+        <p>Seit 19 Jahren betreut sie im fiktiven Versorgungswerk Nordtal die Erstattungsfälle mit Sonderregelungen. Niemand sonst kennt die Ausnahmen, die Ansprechpartner bei den Partnerträgern oder den Ablageort der Altakten. Ab heute stehen 140 offene Vorgänge still.</p>
+      </div>
+    </div>
+    <div class="sheet house">
+      <span class="label">Klicken Sie auf ein Bauteil</span>
+      <svg viewBox="0 0 420 380" role="img" aria-label="Wissenshaus mit Dach, zwei Säulen und Fundament">
+        <g class="zone" tabindex="0" role="button" data-go="rout" aria-label="Dach: Motivation und Routinen">
+          <polygon class="fill" points="210,18 400,120 20,120" fill="var(--c-rout)"/>
+          <text x="210" y="88" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="19">Routinen &amp; Motivation</text>
+          <text x="210" y="108" text-anchor="middle" fill="#fff" font-family="IBM Plex Mono, monospace" font-size="10" opacity=".85">DACH · HÄLT ES DAUERHAFT</text>
+        </g>
+        <g class="zone" tabindex="0" role="button" data-go="abh" aria-label="Säule: Abhängigkeiten reduzieren">
+          <rect class="fill" x="56" y="132" width="120" height="166" fill="var(--c-abh)"/>
+          <text x="116" y="205" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">Abhängig-</text>
+          <text x="116" y="225" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">keiten</text>
+          <text x="116" y="245" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">reduzieren</text>
+          <text x="116" y="280" text-anchor="middle" fill="#fff" font-family="IBM Plex Mono, monospace" font-size="10" opacity=".85">SÄULE 1</text>
+        </g>
+        <g class="zone" tabindex="0" role="button" data-go="doku" aria-label="Säule: Dokumentation und Wissensdatenbank">
+          <rect class="fill" x="244" y="132" width="120" height="166" fill="var(--c-doku)"/>
+          <text x="304" y="205" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">Doku &amp;</text>
+          <text x="304" y="225" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">Wissens-</text>
+          <text x="304" y="245" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">datenbank</text>
+          <text x="304" y="280" text-anchor="middle" fill="#fff" font-family="IBM Plex Mono, monospace" font-size="10" opacity=".85">SÄULE 2</text>
+        </g>
+        <g class="zone" tabindex="0" role="button" data-go="kultur" aria-label="Fundament: Unternehmenskultur">
+          <rect class="fill" x="20" y="310" width="380" height="56" fill="var(--c-kultur)"/>
+          <text x="210" y="336" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="18">Kultur des Teilens</text>
+          <text x="210" y="354" text-anchor="middle" fill="#fff" font-family="IBM Plex Mono, monospace" font-size="10" opacity=".85">FUNDAMENT · TRÄGT ALLES</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="sheet" style="display:flex;flex-direction:column;gap:16px">
+    <h2>Die vier Bauteile</h2>
+    <div class="grid4">
+      <button class="tile" style="--tc:var(--c-kultur)" data-go="kultur"><span class="label">Fundament</span><h3>Kultur des Teilens</h3><span class="q">Wie muss eine Unternehmenskultur geschaffen sein, damit Mitarbeitende bereit sind, ihr Wissen zu teilen, zu dokumentieren und anzunehmen?</span></button>
+      <button class="tile" style="--tc:var(--c-abh)" data-go="abh"><span class="label">Säule 1</span><h3>Abhängigkeiten reduzieren</h3><span class="q">Wie kann eine Organisation Abhängigkeiten von einzelnen Wissensträgern reduzieren?</span></button>
+      <button class="tile" style="--tc:var(--c-doku)" data-go="doku"><span class="label">Säule 2</span><h3>Dokumentation &amp; Wissensdatenbank</h3><span class="q">Wie können Dokumentation und Wissensdatenbanken zur Sicherung von Wissen bei unplanmäßigem Personalausfall beitragen?</span></button>
+      <button class="tile" style="--tc:var(--c-rout)" data-go="rout"><span class="label">Dach</span><h3>Routinen &amp; Motivation</h3><span class="q">Wie können Mitarbeitende motiviert oder Routinen geschaffen werden, um die Wissensdokumentation konstant durchzuführen?</span></button>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="sheet" style="display:flex;flex-direction:column;gap:8px"><span class="label">Ohne Fundament</span><p>Werkzeuge und Regeln werden umgangen, wenn Wissen als persönlicher Vorteil gilt.</p></div>
+    <div class="sheet" style="display:flex;flex-direction:column;gap:8px"><span class="label">Ohne eine Säule</span><p>Nur Köpfe oder nur Dokumente: Fällt die eine Quelle aus, gibt es keinen Ersatz.</p></div>
+    <div class="sheet" style="display:flex;flex-direction:column;gap:8px"><span class="label">Ohne Dach</span><p>Die Wissensdatenbank veraltet nach wenigen Monaten und verliert das Vertrauen der Nutzer.</p></div>
+  </div>
+</section>
+
+<!-- Kapitelvorlage wird per JS befüllt -->
+<section class="view" data-view="kultur" hidden></section>
+<section class="view" data-view="abh" hidden></section>
+<section class="view" data-view="doku" hidden></section>
+<section class="view" data-view="rout" hidden></section>
+
+<!-- FAHRPLAN -->
+<section class="view" data-view="fahrplan" hidden>
+  <div class="chap-head" style="--tc:var(--accent)">
+    <span class="label">Umsetzung</span>
+    <h1>Fahrplan</h1>
+    <p class="lead">Was eine Organisation wann angeht. Die Farben zeigen, zu welchem Bauteil eine Maßnahme gehört.</p>
+  </div>
+  <div class="grid3">
+    <div class="sheet phase">
+      <span class="label">Phase 1</span><span class="when">Sofort</span>
+      <span class="label">0–3 Monate</span>
+      <ul class="plain">
+        <li><span class="tag" style="--tc:var(--c-abh)">Säule 1</span>Wissensträger-Analyse: Wer weiß etwas, das sonst niemand weiß?</li>
+        <li><span class="tag" style="--tc:var(--c-abh)">Säule 1</span>Vertretungsregeln für jede kritische Aufgabe festlegen</li>
+        <li><span class="tag" style="--tc:var(--c-doku)">Säule 2</span>Wiki-Struktur und Vorlagen einführen</li>
+        <li><span class="tag" style="--tc:var(--c-kultur)">Fundament</span>Führungskräfte erklären, warum das Projekt wichtig ist</li>
+      </ul>
+    </div>
+    <div class="sheet phase">
+      <span class="label">Phase 2</span><span class="when">Aufbauen</span>
+      <span class="label">3–12 Monate</span>
+      <ul class="plain">
+        <li><span class="tag" style="--tc:var(--c-abh)">Säule 1</span>Tandems und Job-Rotation für kritische Bereiche</li>
+        <li><span class="tag" style="--tc:var(--c-doku)">Säule 2</span>Kernprozesse vollständig dokumentieren</li>
+        <li><span class="tag" style="--tc:var(--c-rout)">Dach</span>Feste Doku-Zeitfenster im Kalender</li>
+        <li><span class="tag" style="--tc:var(--c-kultur)">Fundament</span>Wissensbeiträge im Mitarbeitergespräch würdigen</li>
+      </ul>
+    </div>
+    <div class="sheet phase">
+      <span class="label">Phase 3</span><span class="when">Verankern</span>
+      <span class="label">ab 12 Monaten</span>
+      <ul class="plain">
+        <li><span class="tag" style="--tc:var(--c-doku)">Säule 2</span>Jährliche Prüfung der Inhalte auf Aktualität</li>
+        <li><span class="tag" style="--tc:var(--c-rout)">Dach</span>Dokumentation als fester Prozessschritt</li>
+        <li><span class="tag" style="--tc:var(--c-kultur)">Fundament</span>Lessons Learned nach jedem Ausfall</li>
+        <li><span class="tag" style="--tc:var(--c-abh)">Säule 1</span>Analyse jährlich wiederholen</li>
+      </ul>
+    </div>
+  </div>
+  <div class="placeholder"><span class="label">Platzhalter</span><p>Hier können Zeiträume und Maßnahmen an euer Konzept angepasst werden.</p></div>
+</section>
+
+<!-- NOTFALL -->
+<section class="view" data-view="notfall" hidden>
+  <div class="chap-head" style="--tc:var(--accent)">
+    <span class="label">Wenn es trotzdem passiert</span>
+    <h1>Notfall-Checkliste</h1>
+    <p class="lead">Für Führungskräfte, wenn eine Wissensträgerin oder ein Wissensträger unerwartet ausfällt. Die Häkchen werden nur in Ihrem Browser gespeichert.</p>
+  </div>
+  <div class="grid3" id="notfall-lists"></div>
+</section>
+
+</main>
+
+<footer><div class="wrap">Gruppenkonzept · Prototyp mit Platzhaltern · Fallbeispiel und Organisation sind fiktiv.</div></footer>
+
+<script>
+const chapters = {
+  kultur:{color:"--c-kultur",part:"Fundament",title:"Kultur des Teilens",
+    q:"Wie muss eine Unternehmenskultur geschaffen sein, damit Mitarbeitende bereit sind, ihr Wissen zu teilen, zu dokumentieren und anzunehmen?",
+    problem:["Wissen gilt als Machtfaktor oder Jobsicherheit","Dokumentieren wird als Zusatzarbeit ohne Anerkennung erlebt","Fehler und Wissenslücken werden lieber verschwiegen","Wissen anderer wird nicht angenommen (Not-invented-here)"],
+    measures:[["Führung als Vorbild","Führungskräfte dokumentieren selbst sichtbar und teilen ihr Wissen."],["Teilen wird belohnt","Wissensbeiträge werden in Gesprächen und Beurteilungen gewürdigt."],["Offene Fehlerkultur","Fragen und Lücken dürfen offen angesprochen werden."],["Zeit wird zugestanden","Wissensarbeit gilt als Arbeitszeit, nicht als Freizeitprojekt."]],
+    example:"Im Versorgungswerk Nordtal stellt die Abteilungsleitung im Teammeeting jeden Monat einen eigenen Wiki-Beitrag vor. Wer einen Eintrag eines Kollegen verbessert, wird namentlich bedankt.",
+    checks:["Führungskräfte teilen selbst sichtbar Wissen","Wissensteilung ist Thema im Mitarbeitergespräch","Zeit für Dokumentation ist offiziell eingeplant","Fragen werden als Beitrag gesehen, nicht als Schwäche"]},
+  abh:{color:"--c-abh",part:"Säule 1",title:"Abhängigkeiten reduzieren",
+    q:"Wie kann eine Organisation Abhängigkeiten von einzelnen Wissensträgern reduzieren?",
+    problem:["Kopfmonopole: nur eine Person beherrscht einen Prozess","Vertretungen existieren nur auf dem Papier","Erfahrungswissen ist nirgends sichtbar","Kontakte zu Partnern laufen über eine Person"],
+    measures:[["Wissensträger-Analyse","Kritisches Wissen und seine Träger systematisch erfassen, z. B. in einer Wissenslandkarte."],["Tandems","Zwei Personen bearbeiten kritische Aufgaben gemeinsam."],["Job-Rotation","Mitarbeitende lernen regelmäßig benachbarte Aufgaben kennen."],["Echte Vertretung","Vertretungen übernehmen regelmäßig Fälle, nicht nur im Ernstfall."]],
+    example:"Nach der Analyse zeigt sich: 4 von 23 Kernprozessen hängen an je einer Person. Für diese vier wird je ein Tandem gebildet, das monatlich einen Fall gemeinsam bearbeitet.",
+    checks:["Kritische Prozesse und ihre Wissensträger sind bekannt","Jeder kritische Prozess hat mindestens zwei Kundige","Vertretungen werden regelmäßig geübt","Externe Kontakte sind mehreren Personen bekannt"]},
+  doku:{color:"--c-doku",part:"Säule 2",title:"Dokumentation & Wissensdatenbank",
+    q:"Wie können Dokumentation und Wissensdatenbanken zur Sicherung von Wissen bei unplanmäßigem Personalausfall beitragen?",
+    problem:["Wissen liegt verstreut in Mails, Ordnern und Köpfen","Vorhandene Dokumente sind veraltet oder nicht auffindbar","Jeder dokumentiert anders","Niemand fühlt sich für die Aktualität zuständig"],
+    measures:[["Zentrales Wiki","Eine Anlaufstelle mit Suchfunktion statt vieler Ablagen."],["Einheitliche Vorlagen","Prozess, Ansprechpartner, Sonderfälle, Ablageorte – immer gleich aufgebaut."],["Verantwortliche je Seite","Jede Seite hat eine zuständige Person und ein Prüfdatum."],["Erfahrungswissen festhalten","Nicht nur Abläufe, auch Tipps, Ausnahmen und typische Fehler."]],
+    example:"Für Frau Meiers Erstattungsprozess entsteht eine Wiki-Seite mit Ablauf, den 12 häufigsten Sonderfällen und den Ansprechpartnern bei Partnerträgern. Ihre Vertretung prüft die Seite einmal im Quartal.",
+    checks:["Es gibt eine zentrale, durchsuchbare Wissensdatenbank","Kernprozesse sind nach einer Vorlage dokumentiert","Jede Seite hat eine verantwortliche Person","Inhalte haben ein Prüfdatum"]},
+  rout:{color:"--c-rout",part:"Dach",title:"Routinen & Motivation",
+    q:"Wie können Mitarbeitende motiviert oder Routinen geschaffen werden, um die Wissensdokumentation konstant durchzuführen?",
+    problem:["Dokumentation wird im Tagesgeschäft verschoben","Anfangseuphorie lässt nach wenigen Wochen nach","Der Nutzen ist für Einzelne nicht spürbar","Dokumentieren dauert zu lange"],
+    measures:[["Feste Zeitfenster","Zum Beispiel jeden Freitag 30 Minuten für Wissenspflege."],["Teil des Prozesses","Ein Vorgang gilt erst als abgeschlossen, wenn Neues dokumentiert ist."],["Nutzen sichtbar machen","Zeigen, wie oft Seiten genutzt werden und wem sie geholfen haben."],["Kleine Anreize","Wertschätzung im Team, kurze Erfolgsgeschichten, ggf. spielerische Elemente."]],
+    example:"Im Team gilt die „Freitagsviertelstunde“: Jede Person ergänzt oder prüft eine Wiki-Seite. Im Monatsmeeting wird kurz gezeigt, welche Seiten am häufigsten geholfen haben.",
+    checks:["Es gibt feste Zeiten für Dokumentation","Dokumentation ist Teil des Prozessabschlusses","Nutzung der Inhalte wird sichtbar gemacht","Die Routine wird regelmäßig überprüft"]}
+};
+const order=["kultur","abh","doku","rout"];
+const names={kultur:"Kultur",abh:"Abhängigkeiten",doku:"Dokumentation",rout:"Routinen"};
+
+function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||"null");localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
+
+function checklist(id,items,color){
+  const saved=store("wh-"+id)||[];
+  const box=document.createElement("div");box.className="check";
+  const prog=document.createElement("span");prog.className="progress";
+  const upd=()=>{const n=box.querySelectorAll("input:checked").length;prog.textContent=n+" von "+items.length+" erledigt"};
+  items.forEach((t,i)=>{
+    const l=document.createElement("label");const cb=document.createElement("input");
+    cb.type="checkbox";cb.id=id+"-"+i;cb.checked=!!saved[i];
+    cb.addEventListener("change",()=>{store("wh-"+id,[...box.querySelectorAll("input")].map(x=>x.checked));upd()});
+    const s=document.createElement("span");s.textContent=t;l.append(cb,s);box.append(l)});
+  upd();return [box,prog];
+}
+
+order.forEach((key,idx)=>{
+  const c=chapters[key];const el=document.querySelector('[data-view="'+key+'"]');
+  el.style.setProperty("--tc","var("+c.color+")");
+  const prev=order[idx-1],next=order[idx+1];
+  el.innerHTML=`
+  <div class="chap-head">
+    <span class="label part"><span class="dot"></span>${c.part}</span>
+    <h1>${c.title}</h1>
+    <p class="question">${c.q}</p>
+    <span class="owner">Bearbeitet von: [Name eintragen]</span>
+  </div>
+  <div class="cols">
+    <div class="sheet" style="display:flex;flex-direction:column;gap:12px"><span class="label">Das Problem</span><ul class="plain">${c.problem.map(p=>"<li>"+p+"</li>").join("")}</ul></div>
+    <div class="sheet" style="display:flex;flex-direction:column;gap:12px"><span class="label">Beispiel aus Nordtal</span><p>${c.example}</p></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px"><h2>Maßnahmen</h2>
+    <div class="measures">${c.measures.map(m=>`<div class="measure"><h3>${m[0]}</h3><p>${m[1]}</p></div>`).join("")}</div>
+  </div>
+  <div class="placeholder"><span class="label">Platzhalter</span><p>Hier kommen die Inhalte aus eurer Wissenslandkarte zu diesem Thema: Quellen, Modelle, weitere Maßnahmen.</p></div>
+  <div class="sheet" style="display:flex;flex-direction:column;gap:12px" data-check><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline"><h2>Selbstcheck</h2></div></div>
+  <div class="pager">
+    <button class="btn ghost" data-go="${prev||"start"}">← ${prev?names[prev]:"Übersicht"}</button>
+    <button class="btn" data-go="${next||"fahrplan"}">${next?names[next]:"Zum Fahrplan"} →</button>
+  </div>`;
+  const [box,prog]=checklist(key,c.checks);
+  const wrap=el.querySelector("[data-check]");wrap.firstElementChild.append(prog);wrap.append(box);
+});
+
+const notfall=[
+  ["Tag 1","--c-rout",["Offene Vorgänge und Fristen sichten","Vertretung benennen und informieren","Zugänge, Postfach und Ablage für Vertretung freischalten","Externe Partner über neue Ansprechperson informieren"]],
+  ["Woche 1","--c-doku",["Vorhandene Dokumentation prüfen und Lücken notieren","Falls möglich: Kurzgespräch oder Übergabe mit der Person","Kollegen mit Teilwissen zusammenholen","Dringende Fälle priorisieren"]],
+  ["Monat 1","--c-kultur",["Fehlendes Wissen nachdokumentieren","Lessons Learned im Team besprechen","Wissensträger-Analyse aktualisieren","Prüfen: Welche Maßnahme aus dem Konzept hätte geholfen?"]]
+];
+const nl=document.getElementById("notfall-lists");
+notfall.forEach(([t,col,items],i)=>{
+  const s=document.createElement("div");s.className="sheet phase";s.style.borderTopColor="var("+col+")";
+  s.innerHTML=`<span class="label">Schritt ${i+1}</span><span class="when">${t}</span>`;
+  const [box,prog]=checklist("notfall"+i,items);s.append(prog,box);nl.append(s)});
+
+function go(v){
+  document.querySelectorAll(".view").forEach(s=>s.hidden=s.dataset.view!==v);
+  document.querySelectorAll("nav button").forEach(b=>b.toggleAttribute("aria-current",b.dataset.go===v));
+  document.querySelectorAll("nav button[aria-current]").forEach(b=>b.setAttribute("aria-current","page"));
+  window.scrollTo({top:0});store("wh-view",v);
+}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-go]");if(t)go(t.dataset.go)});
+document.querySelectorAll(".zone").forEach(z=>z.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go(z.dataset.go)}}));
+const h=location.hash.slice(1);go(chapters[h]||["fahrplan","notfall","start"].includes(h)?h:"start");
+</script>
+</body>
+</html>
