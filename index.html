@@ -11,37 +11,42 @@
 <style>
 /* Layout: Bauplan-Ästhetik – Startseite mit klickbarem Hausquerschnitt, darunter Kapitelseiten im gleichen Raster */
 :root{
-  --bg:#EEF2F0; --paper:#F8FAF9; --ink:#14303A; --muted:#506870; --line:#C9D5D3;
-  --accent:#D6941C; --accent-soft:#F4E3C1;
-  --c-kultur:#4E6B5C; --c-abh:#2F5D7C; --c-doku:#6A4F7A; --c-rout:#B4612F;
+  --bg:#F6F9FC; --paper:#E7EFF8; --ink:#0B2545; --muted:#45597A; --line:#C4D4E7;
+  --brand:#00519C; --on-brand:#FFFFFF; --on-part:#FFFFFF;
+  --accent:#C98A00; --accent-soft:#FBEFC9;
+  --c-kultur:#2E7D4F; --c-abh:#00808A; --c-doku:#6B4C9A; --c-rout:#C2412D;
   --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0F1E23; --paper:#152A31; --ink:#E3ECEA; --muted:#97AEB0; --line:#2A4249;
-  --accent:#E8AE45; --accent-soft:#3A3020;
-  --c-kultur:#7FA690; --c-abh:#6FA3C7; --c-doku:#A98BBB; --c-rout:#DB8C5A; color-scheme:dark}}
+  --bg:#08172B; --paper:#10253F; --ink:#E6EEF7; --muted:#A0B3CC; --line:#24405F;
+  --brand:#00519C; --on-brand:#FFFFFF; --on-part:#08172B;
+  --accent:#F2C14E; --accent-soft:#3A3115;
+  --c-kultur:#62B98A; --c-abh:#3FBCC4; --c-doku:#AE93DA; --c-rout:#EE8068; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0F1E23; --paper:#152A31; --ink:#E3ECEA; --muted:#97AEB0; --line:#2A4249;
-  --accent:#E8AE45; --accent-soft:#3A3020;
-  --c-kultur:#7FA690; --c-abh:#6FA3C7; --c-doku:#A98BBB; --c-rout:#DB8C5A; color-scheme:dark}
+  --bg:#08172B; --paper:#10253F; --ink:#E6EEF7; --muted:#A0B3CC; --line:#24405F;
+  --brand:#00519C; --on-brand:#FFFFFF; --on-part:#08172B;
+  --accent:#F2C14E; --accent-soft:#3A3115;
+  --c-kultur:#62B98A; --c-abh:#3FBCC4; --c-doku:#AE93DA; --c-rout:#EE8068; color-scheme:dark}
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.02rem;line-height:1.6}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--brand)}
 .wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 
-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line)}
-.bar{display:flex;align-items:center;gap:16px;padding-block:10px}
-.brand{font-family:var(--display);font-weight:800;font-size:1.1rem;letter-spacing:-.01em;white-space:nowrap;background:none;border:0;color:var(--ink);cursor:pointer;padding:0}
-.brand span{color:var(--accent)}
-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;min-width:0}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--brand);color:var(--on-brand)}
+.bar{display:flex;align-items:center;gap:16px;padding-block:12px}
+.brand{font-family:var(--display);font-weight:800;font-size:1.15rem;letter-spacing:-.01em;white-space:nowrap;background:none;border:0;color:var(--on-brand);cursor:pointer;padding:0}
+.brand span{color:var(--accent-soft)}
+nav{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;min-width:0;padding:3px}
 nav::-webkit-scrollbar{display:none}
 nav button{font:500 .78rem var(--mono);letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;
-  background:none;border:1px solid transparent;color:var(--muted);padding:6px 10px;border-radius:4px;cursor:pointer}
-nav button:hover{color:var(--ink);border-color:var(--line)}
-nav button[aria-current="page"]{color:var(--ink);border-color:var(--ink)}
+  background:transparent;border:1px solid rgba(255,255,255,.45);color:var(--on-brand);padding:6px 11px;border-radius:999px;cursor:pointer;transition:filter .15s}
+nav button[data-part]{background:var(--pc);border-color:var(--pc);color:var(--on-part);font-weight:500}
+nav button:hover{filter:brightness(1.12)}
+nav button[aria-current="page"]{box-shadow:0 0 0 2px var(--brand),0 0 0 4px var(--on-brand)}
+nav button:not([data-part])[aria-current="page"]{background:var(--on-brand);color:var(--brand)}
 button:focus-visible,.zone:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
 main{padding-block:32px 64px}
@@ -87,7 +92,8 @@ p{margin:0;max-width:65ch}
 .cols > *{min-width:0}
 ul.plain{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
 ul.plain li{padding-left:20px;position:relative}
-ul.plain li::before{content:"";position:absolute;left:0;top:.6em;width:9px;height:9px;border:2px solid var(--tc,var(--accent));border-radius:2px}
+ul.plain li{padding-left:18px}
+ul.plain li::before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--tc,var(--accent));pointer-events:none}
 .measures{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .measure{border:1px solid var(--line);border-radius:6px;padding:16px;background:var(--paper);display:flex;flex-direction:column;gap:6px;min-width:0}
 .measure p{font-size:.95rem;color:var(--muted)}
@@ -108,7 +114,7 @@ ul.plain li::before{content:"";position:absolute;left:0;top:.6em;width:9px;heigh
 /* Fahrplan */
 .phase{border-top:4px solid var(--ink);display:flex;flex-direction:column;gap:12px}
 .phase .when{font-family:var(--display);font-size:1.4rem;font-weight:800}
-.tag{display:inline-block;font:500 .7rem var(--mono);letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:3px;color:var(--paper);background:var(--tc);margin-right:4px}
+.tag{display:inline-block;font:500 .7rem var(--mono);letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:3px;color:var(--on-part);background:var(--tc);margin-right:6px}
 .phase li{font-size:.95rem}
 
 /* Kapitel-Extras */
@@ -125,7 +131,8 @@ ul.plain li::before{content:"";position:absolute;left:0;top:.6em;width:9px;heigh
 .col .sub{color:var(--muted);font-size:.92rem}
 .models{display:flex;flex-wrap:wrap;gap:8px}
 .chip{font:500 .78rem var(--mono);border:1px solid var(--line);border-radius:3px;padding:4px 8px;color:var(--muted)}
-.link{background:none;border:0;padding:0;color:var(--tc);font:700 .92rem var(--body);cursor:pointer;text-align:left;text-decoration:underline;text-underline-offset:3px}
+.link{background:none;border:0;padding:0 2px;color:var(--ink);font:700 .92rem var(--body);cursor:pointer;text-align:left;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px;border-radius:2px}
+.link:hover{background:var(--accent-soft)}
 @media (max-width:760px){.rows div{grid-template-columns:1fr;gap:2px}.bus{grid-template-columns:1fr}}
 /* Abschluss-Feedback */
 .done{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:6px;background:var(--accent-soft);color:var(--ink);font-weight:700}
@@ -141,7 +148,36 @@ ul.plain li::before{content:"";position:absolute;left:0;top:.6em;width:9px;heigh
   opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .15s,transform .15s,visibility .15s;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,.18)}
 .tipbox::after{content:"";position:absolute;left:16px;top:100%;border:6px solid transparent;border-top-color:var(--ink)}
 .tip:hover .tipbox,.tip:focus .tipbox{opacity:1;visibility:visible;transform:none}
-footer{padding-block:24px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);background:var(--paper)}
+/* Fahrplan-Schritte */
+.roadmap{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;position:relative}
+.roadmap::before{content:"";position:absolute;left:28px;right:28px;top:26px;height:3px;background:var(--brand);opacity:.35}
+.step{display:flex;flex-direction:column;gap:14px;min-width:0;position:relative}
+.stepnum{width:54px;height:54px;border-radius:50%;background:var(--brand);color:var(--on-brand);display:grid;place-items:center;font:800 1.6rem var(--display);font-variant-numeric:tabular-nums;box-shadow:0 0 0 6px var(--bg)}
+.stepcard{display:flex;flex-direction:column;gap:12px;flex:1}
+.stepcard .when{font-family:var(--display);font-size:1.4rem;font-weight:800}
+.stepcard li{font-size:.95rem}
+button.tag{border:0;cursor:pointer;font:500 .7rem var(--mono);color:var(--on-part)}
+button.tag:hover{filter:brightness(1.12);text-decoration:underline}
+/* Zitate & Quellen */
+.cite{background:none;border:0;padding:0 2px;font:inherit;font-weight:700;color:var(--ink);cursor:pointer;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px;border-radius:2px}
+.cite:hover{background:var(--accent-soft)}
+.chip.cite{color:var(--ink);background:var(--bg);text-decoration:none;cursor:pointer}
+.chip.cite:hover{border-color:var(--accent);background:var(--accent-soft)}
+.models{align-items:center}
+.refs{margin:0;padding:0 0 0 1.4em;display:flex;flex-direction:column;gap:14px}
+.refs li{padding:14px 16px;border-radius:6px;background:var(--paper);border:1px solid var(--line);scroll-margin-top:110px;transition:background .6s}
+.refs li.flash{background:var(--accent-soft)}
+.refmeta{display:flex;flex-wrap:wrap;gap:16px;margin-top:8px;font-size:.92rem}
+.refmeta a{color:var(--ink);font-weight:700;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px;padding:0 2px;border-radius:2px}
+.refmeta a:hover{background:var(--accent-soft)}
+.refs .link{color:var(--ink);font-weight:400;text-decoration-color:var(--accent)}
+/* Fußzeile */
+footer{padding-block:28px;color:var(--on-brand);font-size:.9rem;background:var(--brand)}
+footer .label{color:var(--on-brand);opacity:.75}
+.foot{display:grid;grid-template-columns:1fr 1fr;gap:16px 32px}
+.foot > *{min-width:0}
+.foot .fine{grid-column:1/-1;opacity:.75;font-size:.82rem}
+@media (max-width:760px){.roadmap{grid-template-columns:1fr}.roadmap::before{left:26px;right:auto;top:28px;bottom:28px;width:3px;height:auto}.foot{grid-template-columns:1fr}}
 
 @media (max-width:760px){
   .hero,.cols,.grid3,.grid4,.measures{grid-template-columns:1fr}
@@ -159,12 +195,13 @@ footer{padding-block:24px;color:var(--muted);font-size:.85rem;border-top:1px sol
     <button class="brand" data-go="start">Wissens<span>haus</span></button>
     <nav aria-label="Kapitel">
       <button data-go="start">Start</button>
-      <button data-go="kultur">Kultur</button>
-      <button data-go="abh">Abhängigkeiten</button>
-      <button data-go="doku">Dokumentation</button>
-      <button data-go="rout">Routinen</button>
+      <button data-go="kultur" data-part style="--pc:var(--c-kultur)">Kultur</button>
+      <button data-go="abh" data-part style="--pc:var(--c-abh)">Abhängigkeiten</button>
+      <button data-go="doku" data-part style="--pc:var(--c-doku)">Dokumentation</button>
+      <button data-go="rout" data-part style="--pc:var(--c-rout)">Routinen</button>
       <button data-go="fahrplan">Fahrplan</button>
       <button data-go="notfall">Notfall</button>
+      <button data-go="quellen">Quellen</button>
     </nav>
   </div>
 </header>
@@ -181,35 +218,35 @@ footer{padding-block:24px;color:var(--muted);font-size:.85rem;border-top:1px sol
       <div class="case">
         <span class="label">Ausgangsfall</span>
         <strong>Montag, 7:45 Uhr. Frau Meier meldet sich ab – auf unbestimmte Zeit.</strong>
-        <p>Seit 19 Jahren betreut sie im fiktiven Versorgungswerk Nordtal die Erstattungsfälle mit Sonderregelungen. Niemand sonst kennt die Ausnahmen, die Ansprechpartner bei den Partnerträgern oder den Ablageort der Altakten. Ab heute stehen 140 offene Vorgänge still.</p>
+        <p>Seit 19 Jahren bearbeitet sie in der fiktiven Berufsgenossenschaft Nordtal die Berufskrankheiten-Verfahren mit Auslandsbezug. Niemand sonst kennt die Sonderfälle, die Ansprechpartner bei Gutachtern und anderen Unfallversicherungsträgern oder den Ablageort der Altakten. Ab heute stehen 140 offene Vorgänge still.</p>
       </div>
     </div>
     <div class="sheet house">
       <span class="label">Klicken Sie auf ein Bauteil</span>
       <svg viewBox="0 0 420 380" role="img" aria-label="Wissenshaus mit Dach, zwei Säulen und Fundament">
         <g class="zone" tabindex="0" role="button" data-go="rout" aria-label="Dach: Motivation und Routinen">
-          <polygon class="fill" points="210,18 400,120 20,120" fill="var(--c-rout)"/>
-          <text x="210" y="88" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="19">Routinen &amp; Motivation</text>
-          <text x="210" y="108" text-anchor="middle" fill="#fff" font-family="IBM Plex Mono, monospace" font-size="10" opacity=".85">DACH · HÄLT ES DAUERHAFT</text>
+          <polygon class="fill" points="210,18 400,120 20,120" style="fill:var(--c-rout)"/>
+          <text x="210" y="88" text-anchor="middle" style="fill:var(--on-part)" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="19">Routinen &amp; Motivation</text>
+          <text x="210" y="108" text-anchor="middle" style="fill:var(--on-part)" font-family="IBM Plex Mono, monospace" font-size="10" opacity=".85">DACH · HÄLT ES DAUERHAFT</text>
         </g>
         <g class="zone" tabindex="0" role="button" data-go="abh" aria-label="Säule: Abhängigkeiten reduzieren">
-          <rect class="fill" x="56" y="132" width="120" height="166" fill="var(--c-abh)"/>
-          <text x="116" y="205" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">Abhängig-</text>
-          <text x="116" y="225" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">keiten</text>
-          <text x="116" y="245" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">reduzieren</text>
-          <text x="116" y="280" text-anchor="middle" fill="#fff" font-family="IBM Plex Mono, monospace" font-size="10" opacity=".85">SÄULE 1</text>
+          <rect class="fill" x="56" y="132" width="120" height="166" style="fill:var(--c-abh)"/>
+          <text x="116" y="205" text-anchor="middle" style="fill:var(--on-part)" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">Abhängig-</text>
+          <text x="116" y="225" text-anchor="middle" style="fill:var(--on-part)" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">keiten</text>
+          <text x="116" y="245" text-anchor="middle" style="fill:var(--on-part)" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">reduzieren</text>
+          <text x="116" y="280" text-anchor="middle" style="fill:var(--on-part)" font-family="IBM Plex Mono, monospace" font-size="10" opacity=".85">SÄULE 1</text>
         </g>
         <g class="zone" tabindex="0" role="button" data-go="doku" aria-label="Säule: Dokumentation und Wissensdatenbank">
-          <rect class="fill" x="244" y="132" width="120" height="166" fill="var(--c-doku)"/>
-          <text x="304" y="205" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">Doku &amp;</text>
-          <text x="304" y="225" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">Wissens-</text>
-          <text x="304" y="245" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">datenbank</text>
-          <text x="304" y="280" text-anchor="middle" fill="#fff" font-family="IBM Plex Mono, monospace" font-size="10" opacity=".85">SÄULE 2</text>
+          <rect class="fill" x="244" y="132" width="120" height="166" style="fill:var(--c-doku)"/>
+          <text x="304" y="205" text-anchor="middle" style="fill:var(--on-part)" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">Doku &amp;</text>
+          <text x="304" y="225" text-anchor="middle" style="fill:var(--on-part)" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">Wissens-</text>
+          <text x="304" y="245" text-anchor="middle" style="fill:var(--on-part)" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">datenbank</text>
+          <text x="304" y="280" text-anchor="middle" style="fill:var(--on-part)" font-family="IBM Plex Mono, monospace" font-size="10" opacity=".85">SÄULE 2</text>
         </g>
         <g class="zone" tabindex="0" role="button" data-go="kultur" aria-label="Fundament: Unternehmenskultur">
-          <rect class="fill" x="20" y="310" width="380" height="56" fill="var(--c-kultur)"/>
-          <text x="210" y="336" text-anchor="middle" fill="#fff" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="18">Kultur des Teilens</text>
-          <text x="210" y="354" text-anchor="middle" fill="#fff" font-family="IBM Plex Mono, monospace" font-size="10" opacity=".85">FUNDAMENT · TRÄGT ALLES</text>
+          <rect class="fill" x="20" y="310" width="380" height="56" style="fill:var(--c-kultur)"/>
+          <text x="210" y="336" text-anchor="middle" style="fill:var(--on-part)" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="18">Kultur des Teilens</text>
+          <text x="210" y="354" text-anchor="middle" style="fill:var(--on-part)" font-family="IBM Plex Mono, monospace" font-size="10" opacity=".85">FUNDAMENT · TRÄGT ALLES</text>
         </g>
       </svg>
     </div>
@@ -240,43 +277,34 @@ footer{padding-block:24px;color:var(--muted);font-size:.85rem;border-top:1px sol
 
 <!-- FAHRPLAN -->
 <section class="view" data-view="fahrplan" hidden>
-  <div class="chap-head" style="--tc:var(--accent)">
+  <div class="chap-head" style="--tc:var(--brand)">
     <span class="label">Umsetzung</span>
     <h1>Fahrplan</h1>
-    <p class="lead">Was eine Organisation wann angeht. Die Farben zeigen, zu welchem Bauteil eine Maßnahme gehört.</p>
+    <p class="lead">Drei Schritte, in denen eine Organisation das Konzept einführt. Die farbigen Markierungen zeigen, zu welchem Bauteil eine Maßnahme gehört. Ein Klick darauf öffnet das Kapitel.</p>
   </div>
-  <div class="grid3">
-    <div class="sheet phase">
-      <span class="label">Phase 1</span><span class="when">Sofort</span>
-      <span class="label">0–3 Monate</span>
-      <ul class="plain">
-        <li><span class="tag" style="--tc:var(--c-abh)">Säule 1</span>Wissensträger-Analyse: Wer weiß etwas, das sonst niemand weiß?</li>
-        <li><span class="tag" style="--tc:var(--c-abh)">Säule 1</span>Vertretungsregeln für jede kritische Aufgabe festlegen</li>
-        <li><span class="tag" style="--tc:var(--c-doku)">Säule 2</span>Wiki-Struktur und Vorlagen einführen</li>
-        <li><span class="tag" style="--tc:var(--c-kultur)">Fundament</span>Führungskräfte erklären, warum das Projekt wichtig ist</li>
-      </ul>
-    </div>
-    <div class="sheet phase">
-      <span class="label">Phase 2</span><span class="when">Aufbauen</span>
-      <span class="label">3–12 Monate</span>
-      <ul class="plain">
-        <li><span class="tag" style="--tc:var(--c-abh)">Säule 1</span>Tandems und Job-Rotation für kritische Bereiche</li>
-        <li><span class="tag" style="--tc:var(--c-doku)">Säule 2</span>Kernprozesse vollständig dokumentieren</li>
-        <li><span class="tag" style="--tc:var(--c-rout)">Dach</span>Feste Doku-Zeitfenster im Kalender</li>
-        <li><span class="tag" style="--tc:var(--c-kultur)">Fundament</span>Wissensbeiträge im Mitarbeitergespräch würdigen</li>
-      </ul>
-    </div>
-    <div class="sheet phase">
-      <span class="label">Phase 3</span><span class="when">Verankern</span>
-      <span class="label">ab 12 Monaten</span>
-      <ul class="plain">
-        <li><span class="tag" style="--tc:var(--c-doku)">Säule 2</span>Jährliche Prüfung der Inhalte auf Aktualität</li>
-        <li><span class="tag" style="--tc:var(--c-rout)">Dach</span>Dokumentation als fester Prozessschritt</li>
-        <li><span class="tag" style="--tc:var(--c-kultur)">Fundament</span>Lessons Learned nach jedem Ausfall</li>
-        <li><span class="tag" style="--tc:var(--c-abh)">Säule 1</span>Analyse jährlich wiederholen</li>
-      </ul>
-    </div>
-  </div>
+  <ol class="roadmap">
+    <li class="step">
+      <span class="stepnum" aria-hidden="true">1</span>
+      <div class="sheet stepcard">
+        <span class="label">Schritt 1 · 0–3 Monate</span><span class="when">Sofort</span>
+        <ul class="plain"><li><button class="tag" data-go="abh" style="--tc:var(--c-abh)">Säule 1</button>Wissensträger-Analyse: Wer weiß etwas, das sonst niemand weiß?</li><li><button class="tag" data-go="abh" style="--tc:var(--c-abh)">Säule 1</button>Vertretungsregeln für jede kritische Aufgabe festlegen</li><li><button class="tag" data-go="doku" style="--tc:var(--c-doku)">Säule 2</button>Wiki-Struktur und Vorlagen einführen</li><li><button class="tag" data-go="kultur" style="--tc:var(--c-kultur)">Fundament</button>Führungskräfte erklären, warum das Projekt wichtig ist</li></ul>
+      </div>
+    </li>
+    <li class="step">
+      <span class="stepnum" aria-hidden="true">2</span>
+      <div class="sheet stepcard">
+        <span class="label">Schritt 2 · 3–12 Monate</span><span class="when">Aufbauen</span>
+        <ul class="plain"><li><button class="tag" data-go="abh" style="--tc:var(--c-abh)">Säule 1</button>Tandems und Jobrotation für kritische Bereiche</li><li><button class="tag" data-go="doku" style="--tc:var(--c-doku)">Säule 2</button>Kernprozesse vollständig dokumentieren</li><li><button class="tag" data-go="rout" style="--tc:var(--c-rout)">Dach</button>Feste Doku-Zeitfenster im Kalender</li><li><button class="tag" data-go="kultur" style="--tc:var(--c-kultur)">Fundament</button>Wissensbeiträge im Mitarbeitergespräch würdigen</li></ul>
+      </div>
+    </li>
+    <li class="step">
+      <span class="stepnum" aria-hidden="true">3</span>
+      <div class="sheet stepcard">
+        <span class="label">Schritt 3 · ab 12 Monaten</span><span class="when">Verankern</span>
+        <ul class="plain"><li><button class="tag" data-go="doku" style="--tc:var(--c-doku)">Säule 2</button>Jährliche Prüfung der Inhalte auf Aktualität</li><li><button class="tag" data-go="rout" style="--tc:var(--c-rout)">Dach</button>Dokumentation als fester Prozessschritt</li><li><button class="tag" data-go="kultur" style="--tc:var(--c-kultur)">Fundament</button>Lessons Learned nach jedem Ausfall</li><li><button class="tag" data-go="abh" style="--tc:var(--c-abh)">Säule 1</button>Analyse jährlich wiederholen</li></ul>
+      </div>
+    </li>
+  </ol>
   <div class="placeholder"><span class="label">Platzhalter</span><p>Hier können Zeiträume und Maßnahmen an euer Konzept angepasst werden.</p></div>
 </section>
 
@@ -290,9 +318,31 @@ footer{padding-block:24px;color:var(--muted);font-size:.85rem;border-top:1px sol
   <div class="grid3" id="notfall-lists"></div>
 </section>
 
+<!-- QUELLEN -->
+<section class="view" data-view="quellen" hidden>
+  <div class="chap-head" style="--tc:var(--brand)">
+    <span class="label">Literatur</span>
+    <h1>Quellen</h1>
+    <p class="lead">Ein Klick auf eine Quellenangabe im Text führt hierher. Die Links öffnen das Dokument, die Quelle bei ResearchGate oder den Eintrag im Katalog der Deutschen Nationalbibliothek.</p>
+  </div>
+  <ol class="refs">
+    <li id="q-bmwi"><p>Bundesministerium für Wirtschaft und Technologie (Hrsg.) (2013): <em>Wissensbilanz – Made in Germany. Leitfaden 2.0 zur Erstellung einer Wissensbilanz.</em> Berlin.</p>
+      <div class="refmeta"><a href="https://wissensmanagement.ipk.fraunhofer.de/wp-content/uploads/2019/01/Leitfaden_2.0_Wissensbilanz_Stand_Nov2013-1.pdf" target="_blank" rel="noopener">PDF öffnen ↗</a><button class="link" data-go="abh">Zitiert in Säule 1, Schritt 1</button></div></li>
+    <li id="q-nonaka"><p>Nonaka, I./Takeuchi, H. (1995): <em>The Knowledge-Creating Company. How Japanese Companies Create the Dynamics of Innovation.</em> New York: Oxford University Press.</p>
+      <div class="refmeta"><a href="https://www.researchgate.net/publication/384316693_The_knowledge-creating_company_How_Japanese_companies_create_the_dynamics_of_innovation" target="_blank" rel="noopener">Bei ResearchGate ↗</a><button class="link" data-go="abh">Zitiert in Säule 1, Schritt 2</button></div></li>
+    <li id="q-north"><p>North, K. (2021): <em>Wissensorientierte Unternehmensführung. Wissensmanagement im digitalen Wandel.</em> 7. Aufl. Wiesbaden: Springer Gabler.</p>
+      <div class="refmeta"><a href="https://portal.dnb.de/opac.htm?method=simpleSearch&amp;query=North+Wissensorientierte+Unternehmensf%C3%BChrung" target="_blank" rel="noopener">Im DNB-Katalog ↗</a><button class="link" data-go="abh">Zitiert in Säule 1, Schritt 2</button></div></li>
+  </ol>
+  <div class="placeholder"><span class="label">Platzhalter</span><p>Hier kommen die Quellen der anderen Kapitel dazu. Seitenzahlen der zitierten Stellen können direkt in die Angaben im Text eingetragen werden, z. B. (North 2021, S. 37).</p></div>
+</section>
+
 </main>
 
-<footer><div class="wrap">Gruppenkonzept · Prototyp mit Platzhaltern · Fallbeispiel und Organisation sind fiktiv.</div></footer>
+<footer><div class="wrap foot">
+  <div class="col"><span class="label">Prüfungsleistung</span><strong>Master of Public Management · Modul 2.1</strong></div>
+  <div class="col"><span class="label">Gruppe</span><span>Luca Giesen · Svenja Lehmann · Björn Brauner · Patrick Kroneberger</span></div>
+  <p class="fine">Das Fallbeispiel und die BG Nordtal sind fiktiv.</p>
+</div></footer>
 
 <script>
 const chapters = {
@@ -300,12 +350,12 @@ const chapters = {
     q:"Wie muss eine Unternehmenskultur geschaffen sein, damit Mitarbeitende bereit sind, ihr Wissen zu teilen, zu dokumentieren und anzunehmen?",
     problem:["Wissen gilt als Machtfaktor oder Jobsicherheit","Dokumentieren wird als Zusatzarbeit ohne Anerkennung erlebt","Fehler und Wissenslücken werden lieber verschwiegen","Wissen anderer wird nicht angenommen (Not-invented-here)"],
     measures:[["Führung als Vorbild","Führungskräfte dokumentieren selbst sichtbar und teilen ihr Wissen."],["Teilen wird belohnt","Wissensbeiträge werden in Gesprächen und Beurteilungen gewürdigt."],["Offene Fehlerkultur","Fragen und Lücken dürfen offen angesprochen werden."],["Zeit wird zugestanden","Wissensarbeit gilt als Arbeitszeit, nicht als Freizeitprojekt."]],
-    example:"Im Versorgungswerk Nordtal stellt die Abteilungsleitung im Teammeeting jeden Monat einen eigenen Wiki-Beitrag vor. Wer einen Eintrag eines Kollegen verbessert, wird namentlich bedankt.",
+    example:"In der BG Nordtal stellt die Abteilungsleitung im Teammeeting jeden Monat einen eigenen Wiki-Beitrag vor. Wer einen Eintrag eines Kollegen verbessert, wird namentlich bedankt.",
     checks:["Führungskräfte teilen selbst sichtbar Wissen","Wissensteilung ist Thema im Mitarbeitergespräch","Zeit für Dokumentation ist offiziell eingeplant","Fragen werden als Beitrag gesehen, nicht als Schwäche"]},
   abh:{color:"--c-abh",part:"Säule 1",title:"Abhängigkeiten reduzieren",owner:"Luca Giesen",
     q:"Wie kann eine Organisation Abhängigkeiten von einzelnen Wissensträgern reduzieren?",
     problem:["Demografischer Wandel: Erfahrene gehen, Wissen geht mit","Fachkräftemangel: Lücken lassen sich nicht schnell nachbesetzen","Generation Z und hybrides Arbeiten: weniger informeller Austausch, häufigere Wechsel","Regulatorische Dynamik: Spezialwissen veraltet schnell und liegt bei wenigen","Wissensmonopole: ein Prozess, eine Person"],
-    example:"Die Analyse zeigt: 4 von 23 Kernprozessen haben einen Bus-Faktor von 1, darunter Frau Meiers Erstattungsfälle. Für diese vier wird je ein Jobtandem gebildet, das monatlich einen Fall gemeinsam bearbeitet.",
+    example:"Die Analyse zeigt: 4 von 23 Kernprozessen haben einen Bus-Faktor von 1, darunter Frau Meiers BK-Verfahren mit Auslandsbezug. Für diese vier wird je ein Jobtandem gebildet, das monatlich einen Fall gemeinsam bearbeitet.",
     extra:`
   <div class="sheet block">
     <div class="bus"><span class="num">1</span><div class="col"><span class="label">Bus-Faktor</span><p>Wie viele Personen müssten ausfallen, bis ein Prozess stillsteht? Liegt der Wert bei 1, hängt der Prozess an einer einzigen Person. Ziel dieser Säule ist, den Bus-Faktor für jeden kritischen Prozess auf mindestens 2 zu bringen.</p></div></div>
@@ -318,18 +368,18 @@ const chapters = {
       <div><dt>Strategische Risikoanalyse</dt><dd>Bewertet, welches Wissen kritisch ist und nur einmal vorhanden ist.</dd></div>
       <div><dt>Schlüsselprozess-Verantwortliche</dt><dd>Benennt, wer die Kernprozesse trägt und wer sie vertreten kann.</dd></div>
       <div><dt>Altersstrukturanalyse</dt><dd>Zeigt, wann Wissensträger planmäßig ausscheiden.</dd></div>
-      <div><dt>Wissensbilanz</dt><dd>Erfasst Wissen als Wert der Organisation und macht Veränderungen messbar.</dd></div>
+      <div><dt>Wissensbilanz</dt><dd>Erfasst Wissen als Wert der Organisation und macht Veränderungen messbar. <button class="cite" data-cite="q-bmwi">(BMWi 2013)</button></dd></div>
     </dl>
   </div>
   <div class="block">
     <h2>Schritt 2: Wissensarten unterscheiden</h2>
-    <p>Nicht jedes Wissen lässt sich gleich übertragen. Die Art des Wissens bestimmt die passende Methode.</p>
+    <p>Nicht jedes Wissen lässt sich gleich übertragen. Die Art des Wissens bestimmt die passende Methode. Die Unterscheidung von explizitem und implizitem Wissen folgt <button class="cite" data-cite="q-nonaka">Nonaka/Takeuchi (1995)</button>.</p>
     <div class="grid3">
       <div class="sheet col"><span class="label">Explizit</span><h3>Fakten &amp; Prozesse</h3><p class="sub">Lässt sich aufschreiben. Übertragung über Dokumentation und Wissensdatenbanken.</p></div>
       <div class="sheet col"><span class="label">Implizit</span><h3>Erfahrung &amp; Intuition</h3><p class="sub">Steckt in Köpfen und Routinen. Übertragung über Tandems, Mentoring und Jobshadowing.</p></div>
       <div class="sheet col"><span class="label">Beziehungswissen</span><h3>Wer weiß was?</h3><p class="sub">Kontakte und Netzwerke. Übertragung durch gemeinsames Arbeiten und aktive Netzwerkübergabe.</p></div>
     </div>
-    <div class="models"><span class="chip">SECI-Modell (Nonaka/Takeuchi)</span><span class="chip">Wissenstreppe (North)</span></div>
+    <div class="models"><span class="label">Modelle</span><button class="chip cite" data-cite="q-nonaka">SECI-Modell (Nonaka/Takeuchi 1995)</button><button class="chip cite" data-cite="q-north">Wissenstreppe (North 2021)</button></div>
   </div>
   <div class="block">
     <h2>Schritt 3: Wissen übertragen</h2>
@@ -346,7 +396,7 @@ const chapters = {
     q:"Wie können Dokumentation und Wissensdatenbanken zur Sicherung von Wissen bei unplanmäßigem Personalausfall beitragen?",
     problem:["Wissen liegt verstreut in Mails, Ordnern und Köpfen","Vorhandene Dokumente sind veraltet oder nicht auffindbar","Jeder dokumentiert anders","Niemand fühlt sich für die Aktualität zuständig"],
     measures:[["Zentrales Wiki","Eine Anlaufstelle mit Suchfunktion statt vieler Ablagen."],["Einheitliche Vorlagen","Prozess, Ansprechpartner, Sonderfälle, Ablageorte – immer gleich aufgebaut."],["Verantwortliche je Seite","Jede Seite hat eine zuständige Person und ein Prüfdatum."],["Erfahrungswissen festhalten","Nicht nur Abläufe, auch Tipps, Ausnahmen und typische Fehler."]],
-    example:"Für Frau Meiers Erstattungsprozess entsteht eine Wiki-Seite mit Ablauf, den 12 häufigsten Sonderfällen und den Ansprechpartnern bei Partnerträgern. Ihre Vertretung prüft die Seite einmal im Quartal.",
+    example:"Für Frau Meiers BK-Verfahren mit Auslandsbezug entsteht eine Wiki-Seite mit Ablauf, den 12 häufigsten Sonderfällen und den Ansprechpartnern bei Gutachtern und anderen Unfallversicherungsträgern. Ihre Vertretung prüft die Seite einmal im Quartal.",
     checks:["Es gibt eine zentrale, durchsuchbare Wissensdatenbank","Kernprozesse sind nach einer Vorlage dokumentiert","Jede Seite hat eine verantwortliche Person","Inhalte haben ein Prüfdatum"]},
   rout:{color:"--c-rout",part:"Dach",title:"Routinen & Motivation",
     q:"Wie können Mitarbeitende motiviert oder Routinen geschaffen werden, um die Wissensdokumentation konstant durchzuführen?",
@@ -402,7 +452,7 @@ order.forEach((key,idx)=>{
   </div>
   <div class="cols">
     <div class="sheet" style="display:flex;flex-direction:column;gap:12px"><span class="label">Das Problem</span><ul class="plain">${c.problem.map(p=>"<li>"+p+"</li>").join("")}</ul></div>
-    <div class="sheet" style="display:flex;flex-direction:column;gap:12px"><span class="label">Beispiel aus Nordtal</span><p>${c.example}</p></div>
+    <div class="sheet" style="display:flex;flex-direction:column;gap:12px"><span class="label">Beispiel aus der BG Nordtal</span><p>${c.example}</p></div>
   </div>
   ${c.measures?`<div style="display:flex;flex-direction:column;gap:12px"><h2>Maßnahmen</h2>
     <div class="measures">${c.measures.map(m=>`<div class="measure"><h3>${m[0]}</h3><p>${m[1]}</p></div>`).join("")}</div>
@@ -434,9 +484,12 @@ function go(v){
   document.querySelectorAll("nav button[aria-current]").forEach(b=>b.setAttribute("aria-current","page"));
   window.scrollTo({top:0});store("wh-view",v);
 }
-document.addEventListener("click",e=>{const t=e.target.closest("[data-go]");if(t)go(t.dataset.go)});
+document.addEventListener("click",e=>{
+  const c=e.target.closest("[data-cite]");
+  if(c){go("quellen");const r=document.getElementById(c.dataset.cite);if(r){r.scrollIntoView({block:"center"});r.classList.add("flash");setTimeout(()=>r.classList.remove("flash"),1600)}return}
+  const t=e.target.closest("[data-go]");if(t)go(t.dataset.go)});
 document.querySelectorAll(".zone").forEach(z=>z.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go(z.dataset.go)}}));
-const h=location.hash.slice(1);go(chapters[h]||["fahrplan","notfall","start"].includes(h)?h:"start");
+const h=location.hash.slice(1);go(chapters[h]||["fahrplan","notfall","quellen","start"].includes(h)?h:"start");
 </script>
 </body>
 </html>
