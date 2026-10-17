@@ -28,9 +28,7 @@
   --c-kultur:#7FA690; --c-abh:#6FA3C7; --c-doku:#A98BBB; --c-rout:#DB8C5A; color-scheme:dark}
 
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.02rem;line-height:1.6;
-  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
-  background-size:32px 32px;background-attachment:fixed}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.02rem;line-height:1.6}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
 .wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 
@@ -113,6 +111,28 @@ ul.plain li::before{content:"";position:absolute;left:0;top:.6em;width:9px;heigh
 .tag{display:inline-block;font:500 .7rem var(--mono);letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:3px;color:var(--paper);background:var(--tc);margin-right:4px}
 .phase li{font-size:.95rem}
 
+/* Kapitel-Extras */
+.block{display:flex;flex-direction:column;gap:14px}
+.bus{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
+.bus > *{min-width:0}
+.bus .num{font-family:var(--display);font-weight:800;font-size:4.2rem;line-height:1;color:var(--tc);font-variant-numeric:tabular-nums}
+.rows{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.rows div{display:grid;grid-template-columns:minmax(180px,1fr) 2fr;gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.rows div > *{min-width:0}
+.rows dt{font-weight:700}
+.rows dd{margin:0;color:var(--muted)}
+.col{display:flex;flex-direction:column;gap:10px}
+.col .sub{color:var(--muted);font-size:.92rem}
+.models{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 .78rem var(--mono);border:1px solid var(--line);border-radius:3px;padding:4px 8px;color:var(--muted)}
+.link{background:none;border:0;padding:0;color:var(--tc);font:700 .92rem var(--body);cursor:pointer;text-align:left;text-decoration:underline;text-underline-offset:3px}
+@media (max-width:760px){.rows div{grid-template-columns:1fr;gap:2px}.bus{grid-template-columns:1fr}}
+/* Abschluss-Feedback */
+.done{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:6px;background:var(--accent-soft);color:var(--ink);font-weight:700}
+.done .pop{font-size:1.8rem;line-height:1;animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{transform:scale(0) rotate(-30deg)}100%{transform:scale(1) rotate(0)}}
+.confetti{position:fixed;left:0;top:0;pointer-events:none;z-index:50;font-size:1.5rem;line-height:1}
+@media (prefers-reduced-motion:reduce){.done .pop{animation:none}}
 footer{padding-block:24px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);background:var(--paper)}
 
 @media (max-width:760px){
@@ -274,12 +294,47 @@ const chapters = {
     measures:[["Führung als Vorbild","Führungskräfte dokumentieren selbst sichtbar und teilen ihr Wissen."],["Teilen wird belohnt","Wissensbeiträge werden in Gesprächen und Beurteilungen gewürdigt."],["Offene Fehlerkultur","Fragen und Lücken dürfen offen angesprochen werden."],["Zeit wird zugestanden","Wissensarbeit gilt als Arbeitszeit, nicht als Freizeitprojekt."]],
     example:"Im Versorgungswerk Nordtal stellt die Abteilungsleitung im Teammeeting jeden Monat einen eigenen Wiki-Beitrag vor. Wer einen Eintrag eines Kollegen verbessert, wird namentlich bedankt.",
     checks:["Führungskräfte teilen selbst sichtbar Wissen","Wissensteilung ist Thema im Mitarbeitergespräch","Zeit für Dokumentation ist offiziell eingeplant","Fragen werden als Beitrag gesehen, nicht als Schwäche"]},
-  abh:{color:"--c-abh",part:"Säule 1",title:"Abhängigkeiten reduzieren",
+  abh:{color:"--c-abh",part:"Säule 1",title:"Abhängigkeiten reduzieren",owner:"Luca Giesen",
     q:"Wie kann eine Organisation Abhängigkeiten von einzelnen Wissensträgern reduzieren?",
-    problem:["Kopfmonopole: nur eine Person beherrscht einen Prozess","Vertretungen existieren nur auf dem Papier","Erfahrungswissen ist nirgends sichtbar","Kontakte zu Partnern laufen über eine Person"],
-    measures:[["Wissensträger-Analyse","Kritisches Wissen und seine Träger systematisch erfassen, z. B. in einer Wissenslandkarte."],["Tandems","Zwei Personen bearbeiten kritische Aufgaben gemeinsam."],["Job-Rotation","Mitarbeitende lernen regelmäßig benachbarte Aufgaben kennen."],["Echte Vertretung","Vertretungen übernehmen regelmäßig Fälle, nicht nur im Ernstfall."]],
-    example:"Nach der Analyse zeigt sich: 4 von 23 Kernprozessen hängen an je einer Person. Für diese vier wird je ein Tandem gebildet, das monatlich einen Fall gemeinsam bearbeitet.",
-    checks:["Kritische Prozesse und ihre Wissensträger sind bekannt","Jeder kritische Prozess hat mindestens zwei Kundige","Vertretungen werden regelmäßig geübt","Externe Kontakte sind mehreren Personen bekannt"]},
+    problem:["Demografischer Wandel: Erfahrene gehen, Wissen geht mit","Fachkräftemangel: Lücken lassen sich nicht schnell nachbesetzen","Generation Z und hybrides Arbeiten: weniger informeller Austausch, häufigere Wechsel","Regulatorische Dynamik: Spezialwissen veraltet schnell und liegt bei wenigen","Wissensmonopole: ein Prozess, eine Person"],
+    measures:[["Jobtandem & Mentoring","Erfahrene und Neue arbeiten gemeinsam an kritischen Aufgaben. Beim Reverse Mentoring lernen Erfahrene von Jüngeren, z. B. bei digitalen Werkzeugen."],["Jobrotation & Jobshadowing","Mitarbeitende lernen benachbarte Aufgaben kennen oder begleiten Kolleginnen und Kollegen im Arbeitsalltag."],["Vertretung nach dem Vier-Augen-Prinzip","Jede kritische Aufgabe kennen mindestens zwei Personen, und die Vertretung arbeitet regelmäßig mit."],["Frühzeitige Nachfolgeplanung","Absehbare Abgänge werden Jahre vorher erkannt und die Nachfolge rechtzeitig eingearbeitet."]],
+    example:"Die Analyse zeigt: 4 von 23 Kernprozessen haben einen Bus-Faktor von 1, darunter Frau Meiers Erstattungsfälle. Für diese vier wird je ein Jobtandem gebildet, das monatlich einen Fall gemeinsam bearbeitet.",
+    extra:`
+  <div class="sheet block">
+    <div class="bus"><span class="num">1</span><div class="col"><span class="label">Bus-Faktor</span><p>Wie viele Personen müssten ausfallen, bis ein Prozess stillsteht? Liegt der Wert bei 1, hängt der Prozess an einer einzigen Person. Ziel dieser Säule ist, den Bus-Faktor für jeden kritischen Prozess auf mindestens 2 zu bringen.</p></div></div>
+  </div>
+  <div class="block">
+    <h2>Schritt 1: Abhängigkeiten sichtbar machen</h2>
+    <p>Bevor Abhängigkeiten reduziert werden, muss die Organisation wissen, wo sie bestehen.</p>
+    <dl class="rows">
+      <div><dt>Wissenslandkarte</dt><dd>Zeigt, wer welches Wissen hat und wo es liegt.</dd></div>
+      <div><dt>Strategische Risikoanalyse</dt><dd>Bewertet, welches Wissen kritisch ist und nur einmal vorhanden ist.</dd></div>
+      <div><dt>Schlüsselprozess-Verantwortliche</dt><dd>Benennt, wer die Kernprozesse trägt und wer sie vertreten kann.</dd></div>
+      <div><dt>Altersstrukturanalyse</dt><dd>Zeigt, wann Wissensträger planmäßig ausscheiden.</dd></div>
+      <div><dt>Wissensbilanz</dt><dd>Erfasst Wissen als Wert der Organisation und macht Veränderungen messbar.</dd></div>
+    </dl>
+  </div>
+  <div class="block">
+    <h2>Schritt 2: Wissensarten unterscheiden</h2>
+    <p>Nicht jedes Wissen lässt sich gleich übertragen. Die Art des Wissens bestimmt die passende Methode.</p>
+    <div class="grid3">
+      <div class="sheet col"><span class="label">Explizit</span><h3>Fakten &amp; Prozesse</h3><p class="sub">Lässt sich aufschreiben. Übertragung über Dokumentation und Wissensdatenbanken.</p></div>
+      <div class="sheet col"><span class="label">Implizit</span><h3>Erfahrung &amp; Intuition</h3><p class="sub">Steckt in Köpfen und Routinen. Übertragung über Tandems, Mentoring und Jobshadowing.</p></div>
+      <div class="sheet col"><span class="label">Beziehungswissen</span><h3>Wer weiß was?</h3><p class="sub">Kontakte und Netzwerke. Übertragung durch gemeinsames Arbeiten und aktive Netzwerkübergabe.</p></div>
+    </div>
+    <div class="models"><span class="chip">SECI-Modell (Nonaka/Takeuchi)</span><span class="chip">Wissenstreppe (North)</span></div>
+  </div>
+  <div class="block">
+    <h2>Schritt 3: Wissen übertragen</h2>
+    <p>Die Transfermethoden nach Zeithorizont: vorsorgend, laufend und im Ernstfall.</p>
+    <div class="grid3">
+      <div class="sheet col"><span class="label">Langfristig · vorsorgend</span><ul class="plain"><li>Jobtandem</li><li>Mentoring</li><li>Jobrotation</li><li>Jobshadowing</li><li>Reverse Mentoring</li><li>Frühzeitige Nachfolgeplanung</li></ul></div>
+      <div class="sheet col"><span class="label">Kontinuierlich · im Alltag</span><ul class="plain"><li>Wikis &amp; Wissensdatenbanken</li><li>Lessons Learned</li><li>KI-gestützte Dokumentation</li><li>Vertretungsregeln (Vier-Augen-Prinzip)</li><li>Communities of Practice</li><li>Kollegiale Fallberatung</li></ul><button class="link" data-go="doku">Vertieft in Säule 2 →</button></div>
+      <div class="sheet col"><span class="label">Kurzfristig · beim Abgang</span><ul class="plain"><li>Expert Debriefing</li><li>Strukturierte Übergabe</li><li>Daten &amp; Zugänge sichern</li><li>Offene Vorgänge &amp; Fristen</li><li>Netzwerk übergeben</li></ul><button class="link" data-go="notfall">Zur Notfall-Checkliste →</button></div>
+    </div>
+  </div>
+  <div class="placeholder"><span class="label">Schnittstelle zum Fundament</span><p>Alle Methoden wirken nur mit Wissenskultur und Vertrauen, Transparenz und Wertschätzung, Führung als Vorbild und einem festen Zeitbudget für Wissensarbeit. Unterstützend helfen vernetzte Plattformen und KI-gestützte Interviews. <button class="link" data-go="kultur">Mehr im Kapitel Kultur →</button></p></div>`,
+    checks:["Kritische Prozesse und ihre Wissensträger sind bekannt","Kein kritischer Prozess hat einen Bus-Faktor von 1","Vertretungen arbeiten regelmäßig mit","Absehbare Abgänge sind in der Nachfolgeplanung erfasst","Externe Kontakte sind mehreren Personen bekannt"]},
   doku:{color:"--c-doku",part:"Säule 2",title:"Dokumentation & Wissensdatenbank",
     q:"Wie können Dokumentation und Wissensdatenbanken zur Sicherung von Wissen bei unplanmäßigem Personalausfall beitragen?",
     problem:["Wissen liegt verstreut in Mails, Ordnern und Köpfen","Vorhandene Dokumente sind veraltet oder nicht auffindbar","Jeder dokumentiert anders","Niemand fühlt sich für die Aktualität zuständig"],
@@ -302,15 +357,31 @@ function checklist(id,items,color){
   const saved=store("wh-"+id)||[];
   const box=document.createElement("div");box.className="check";
   const prog=document.createElement("span");prog.className="progress";
-  const upd=()=>{const n=box.querySelectorAll("input:checked").length;prog.textContent=n+" von "+items.length+" erledigt"};
+  const done=document.createElement("div");done.className="done";done.hidden=true;done.setAttribute("role","status");
+  let was=false;
+  const upd=(user)=>{const n=box.querySelectorAll("input:checked").length;prog.textContent=n+" von "+items.length+" erledigt";
+    const all=n===items.length;done.hidden=!all;
+    if(all){done.innerHTML='<span class="pop">'+pick()+'</span><span>Alle '+items.length+' Punkte erfüllt. Gut gemacht!</span>';if(user&&!was)burst(done)}
+    was=all};
   items.forEach((t,i)=>{
     const l=document.createElement("label");const cb=document.createElement("input");
     cb.type="checkbox";cb.id=id+"-"+i;cb.checked=!!saved[i];
-    cb.addEventListener("change",()=>{store("wh-"+id,[...box.querySelectorAll("input")].map(x=>x.checked));upd()});
+    cb.addEventListener("change",()=>{store("wh-"+id,[...box.querySelectorAll("input")].map(x=>x.checked));upd(true)});
     const s=document.createElement("span");s.textContent=t;l.append(cb,s);box.append(l)});
-  upd();return [box,prog];
+  box.append(done);upd(false);return [box,prog];
 }
 
+const emojis=["🎉","🥳","⭐","✨","👏","🏆","✅","🙌"];
+function pick(){return ["🎉","🥳","🏆","🙌"][Math.floor(Math.random()*4)]}
+function burst(el){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  const r=el.getBoundingClientRect(),x=r.left+36,y=r.top+r.height/2;
+  for(let i=0;i<18;i++){
+    const e=document.createElement("span");e.className="confetti";e.textContent=emojis[i%emojis.length];document.body.append(e);
+    const a=Math.random()*Math.PI*2,d=80+Math.random()*140,dx=Math.cos(a)*d,dy=Math.sin(a)*d-60;
+    e.animate([{transform:`translate(${x}px,${y}px) scale(.4)`,opacity:1},{transform:`translate(${x+dx}px,${y+dy}px) scale(1.1) rotate(${Math.random()*80-40}deg)`,opacity:1,offset:.6},{transform:`translate(${x+dx*1.1}px,${y+dy+90}px) scale(.9)`,opacity:0}],{duration:1100+Math.random()*500,easing:"cubic-bezier(.15,.7,.3,1)"}).onfinish=()=>e.remove();
+  }
+}
 order.forEach((key,idx)=>{
   const c=chapters[key];const el=document.querySelector('[data-view="'+key+'"]');
   el.style.setProperty("--tc","var("+c.color+")");
@@ -320,7 +391,7 @@ order.forEach((key,idx)=>{
     <span class="label part"><span class="dot"></span>${c.part}</span>
     <h1>${c.title}</h1>
     <p class="question">${c.q}</p>
-    <span class="owner">Bearbeitet von: [Name eintragen]</span>
+    <span class="owner">Bearbeitet von: ${c.owner||"[Name eintragen]"}</span>
   </div>
   <div class="cols">
     <div class="sheet" style="display:flex;flex-direction:column;gap:12px"><span class="label">Das Problem</span><ul class="plain">${c.problem.map(p=>"<li>"+p+"</li>").join("")}</ul></div>
@@ -329,7 +400,7 @@ order.forEach((key,idx)=>{
   <div style="display:flex;flex-direction:column;gap:12px"><h2>Maßnahmen</h2>
     <div class="measures">${c.measures.map(m=>`<div class="measure"><h3>${m[0]}</h3><p>${m[1]}</p></div>`).join("")}</div>
   </div>
-  <div class="placeholder"><span class="label">Platzhalter</span><p>Hier kommen die Inhalte aus eurer Wissenslandkarte zu diesem Thema: Quellen, Modelle, weitere Maßnahmen.</p></div>
+  ${c.extra||'<div class="placeholder"><span class="label">Platzhalter</span><p>Hier kommen die Inhalte aus eurer Wissenslandkarte zu diesem Thema: Quellen, Modelle, weitere Maßnahmen.</p></div>'}
   <div class="sheet" style="display:flex;flex-direction:column;gap:12px" data-check><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline"><h2>Selbstcheck</h2></div></div>
   <div class="pager">
     <button class="btn ghost" data-go="${prev||"start"}">← ${prev?names[prev]:"Übersicht"}</button>
