@@ -133,6 +133,14 @@ ul.plain li::before{content:"";position:absolute;left:0;top:.6em;width:9px;heigh
 @keyframes pop{0%{transform:scale(0) rotate(-30deg)}100%{transform:scale(1) rotate(0)}}
 .confetti{position:fixed;left:0;top:0;pointer-events:none;z-index:50;font-size:1.5rem;line-height:1}
 @media (prefers-reduced-motion:reduce){.done .pop{animation:none}}
+/* Tooltips */
+.tip{position:relative;cursor:help;text-decoration:underline dotted var(--tc);text-decoration-thickness:2px;text-underline-offset:4px;border-radius:2px}
+.tip:focus{outline:none}
+.tip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tipbox{position:absolute;left:0;bottom:calc(100% + 10px);width:min(280px,72vw);background:var(--ink);color:var(--paper);padding:10px 12px;border-radius:6px;font-size:.88rem;line-height:1.45;font-weight:400;z-index:20;
+  opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .15s,transform .15s,visibility .15s;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.tipbox::after{content:"";position:absolute;left:16px;top:100%;border:6px solid transparent;border-top-color:var(--ink)}
+.tip:hover .tipbox,.tip:focus .tipbox{opacity:1;visibility:visible;transform:none}
 footer{padding-block:24px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);background:var(--paper)}
 
 @media (max-width:760px){
@@ -297,7 +305,6 @@ const chapters = {
   abh:{color:"--c-abh",part:"Säule 1",title:"Abhängigkeiten reduzieren",owner:"Luca Giesen",
     q:"Wie kann eine Organisation Abhängigkeiten von einzelnen Wissensträgern reduzieren?",
     problem:["Demografischer Wandel: Erfahrene gehen, Wissen geht mit","Fachkräftemangel: Lücken lassen sich nicht schnell nachbesetzen","Generation Z und hybrides Arbeiten: weniger informeller Austausch, häufigere Wechsel","Regulatorische Dynamik: Spezialwissen veraltet schnell und liegt bei wenigen","Wissensmonopole: ein Prozess, eine Person"],
-    measures:[["Jobtandem & Mentoring","Erfahrene und Neue arbeiten gemeinsam an kritischen Aufgaben. Beim Reverse Mentoring lernen Erfahrene von Jüngeren, z. B. bei digitalen Werkzeugen."],["Jobrotation & Jobshadowing","Mitarbeitende lernen benachbarte Aufgaben kennen oder begleiten Kolleginnen und Kollegen im Arbeitsalltag."],["Vertretung nach dem Vier-Augen-Prinzip","Jede kritische Aufgabe kennen mindestens zwei Personen, und die Vertretung arbeitet regelmäßig mit."],["Frühzeitige Nachfolgeplanung","Absehbare Abgänge werden Jahre vorher erkannt und die Nachfolge rechtzeitig eingearbeitet."]],
     example:"Die Analyse zeigt: 4 von 23 Kernprozessen haben einen Bus-Faktor von 1, darunter Frau Meiers Erstattungsfälle. Für diese vier wird je ein Jobtandem gebildet, das monatlich einen Fall gemeinsam bearbeitet.",
     extra:`
   <div class="sheet block">
@@ -326,10 +333,10 @@ const chapters = {
   </div>
   <div class="block">
     <h2>Schritt 3: Wissen übertragen</h2>
-    <p>Die Transfermethoden nach Zeithorizont: vorsorgend, laufend und im Ernstfall.</p>
+    <p>Die Transfermethoden nach Zeithorizont: vorsorgend, laufend und im Ernstfall. Unterstrichene Begriffe zeigen beim Darüberfahren oder Antippen eine Erklärung.</p>
     <div class="grid3">
-      <div class="sheet col"><span class="label">Langfristig · vorsorgend</span><ul class="plain"><li>Jobtandem</li><li>Mentoring</li><li>Jobrotation</li><li>Jobshadowing</li><li>Reverse Mentoring</li><li>Frühzeitige Nachfolgeplanung</li></ul></div>
-      <div class="sheet col"><span class="label">Kontinuierlich · im Alltag</span><ul class="plain"><li>Wikis &amp; Wissensdatenbanken</li><li>Lessons Learned</li><li>KI-gestützte Dokumentation</li><li>Vertretungsregeln (Vier-Augen-Prinzip)</li><li>Communities of Practice</li><li>Kollegiale Fallberatung</li></ul><button class="link" data-go="doku">Vertieft in Säule 2 →</button></div>
+      <div class="sheet col"><span class="label">Langfristig · vorsorgend</span><ul class="plain"><li><span class="tip" tabindex="0">Jobtandem<span class="tipbox" role="tooltip">Erfahrene und neue Mitarbeitende bearbeiten kritische Aufgaben gemeinsam. So wird auch implizites Wissen weitergegeben.</span></span></li><li><span class="tip" tabindex="0">Mentoring<span class="tipbox" role="tooltip">Eine erfahrene Person begleitet eine weniger erfahrene über längere Zeit und gibt Erfahrungswissen und Kontakte weiter.</span></span></li><li><span class="tip" tabindex="0">Jobrotation<span class="tipbox" role="tooltip">Mitarbeitende übernehmen zeitweise benachbarte Aufgaben und lernen so weitere Prozesse kennen.</span></span></li><li><span class="tip" tabindex="0">Jobshadowing<span class="tipbox" role="tooltip">Mitarbeitende begleiten Kolleginnen und Kollegen im Arbeitsalltag und lernen durch Beobachten.</span></span></li><li><span class="tip" tabindex="0">Reverse Mentoring<span class="tipbox" role="tooltip">Jüngere geben ihr Wissen an Erfahrene weiter, z. B. zu digitalen Werkzeugen.</span></span></li><li><span class="tip" tabindex="0">Frühzeitige Nachfolgeplanung<span class="tipbox" role="tooltip">Absehbare Abgänge werden Jahre vorher erkannt und die Nachfolge wird rechtzeitig eingearbeitet.</span></span></li></ul></div>
+      <div class="sheet col"><span class="label">Kontinuierlich · im Alltag</span><ul class="plain"><li>Wikis &amp; Wissensdatenbanken</li><li>Lessons Learned</li><li>KI-gestützte Dokumentation</li><li><span class="tip" tabindex="0">Vertretungsregeln (Vier-Augen-Prinzip)<span class="tipbox" role="tooltip">Jede kritische Aufgabe kennen mindestens zwei Personen, und die Vertretung arbeitet regelmäßig mit.</span></span></li><li>Communities of Practice</li><li>Kollegiale Fallberatung</li></ul><button class="link" data-go="doku">Vertieft in Säule 2 →</button></div>
       <div class="sheet col"><span class="label">Kurzfristig · beim Abgang</span><ul class="plain"><li>Expert Debriefing</li><li>Strukturierte Übergabe</li><li>Daten &amp; Zugänge sichern</li><li>Offene Vorgänge &amp; Fristen</li><li>Netzwerk übergeben</li></ul><button class="link" data-go="notfall">Zur Notfall-Checkliste →</button></div>
     </div>
   </div>
@@ -397,9 +404,9 @@ order.forEach((key,idx)=>{
     <div class="sheet" style="display:flex;flex-direction:column;gap:12px"><span class="label">Das Problem</span><ul class="plain">${c.problem.map(p=>"<li>"+p+"</li>").join("")}</ul></div>
     <div class="sheet" style="display:flex;flex-direction:column;gap:12px"><span class="label">Beispiel aus Nordtal</span><p>${c.example}</p></div>
   </div>
-  <div style="display:flex;flex-direction:column;gap:12px"><h2>Maßnahmen</h2>
+  ${c.measures?`<div style="display:flex;flex-direction:column;gap:12px"><h2>Maßnahmen</h2>
     <div class="measures">${c.measures.map(m=>`<div class="measure"><h3>${m[0]}</h3><p>${m[1]}</p></div>`).join("")}</div>
-  </div>
+  </div>`:""}
   ${c.extra||'<div class="placeholder"><span class="label">Platzhalter</span><p>Hier kommen die Inhalte aus eurer Wissenslandkarte zu diesem Thema: Quellen, Modelle, weitere Maßnahmen.</p></div>'}
   <div class="sheet" style="display:flex;flex-direction:column;gap:12px" data-check><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline"><h2>Selbstcheck</h2></div></div>
   <div class="pager">
