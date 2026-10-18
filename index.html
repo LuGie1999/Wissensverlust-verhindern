@@ -12,7 +12,7 @@
 /* Layout: Bauplan-Ästhetik – Startseite mit klickbarem Hausquerschnitt, darunter Kapitelseiten im gleichen Raster */
 :root{
   --bg:#F6F9FC; --paper:#E7EFF8; --ink:#0B2545; --muted:#45597A; --line:#C4D4E7;
-  --brand:#00519C; --on-brand:#FFFFFF; --on-part:#FFFFFF;
+  --brand:#00519C; --on-brand:#FFFFFF; --on-part:#FFFFFF; --ruin:#A9B6C6; --ruin-ink:#0B2545;
   --accent:#C98A00; --accent-soft:#FBEFC9;
   --c-kultur:#2E7D4F; --c-abh:#00808A; --c-doku:#6B4C9A; --c-rout:#C2412D;
   --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
@@ -21,12 +21,12 @@
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#08172B; --paper:#10253F; --ink:#E6EEF7; --muted:#A0B3CC; --line:#24405F;
-  --brand:#00519C; --on-brand:#FFFFFF; --on-part:#08172B;
+  --brand:#00519C; --on-brand:#FFFFFF; --on-part:#08172B; --ruin:#34485F; --ruin-ink:#E6EEF7;
   --accent:#F2C14E; --accent-soft:#3A3115;
   --c-kultur:#62B98A; --c-abh:#3FBCC4; --c-doku:#AE93DA; --c-rout:#EE8068; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#08172B; --paper:#10253F; --ink:#E6EEF7; --muted:#A0B3CC; --line:#24405F;
-  --brand:#00519C; --on-brand:#FFFFFF; --on-part:#08172B;
+  --brand:#00519C; --on-brand:#FFFFFF; --on-part:#08172B; --ruin:#34485F; --ruin-ink:#E6EEF7;
   --accent:#F2C14E; --accent-soft:#3A3115;
   --c-kultur:#62B98A; --c-abh:#3FBCC4; --c-doku:#AE93DA; --c-rout:#EE8068; color-scheme:dark}
 
@@ -66,7 +66,49 @@ p{margin:0;max-width:65ch}
 .case strong{font-family:var(--display)}
 
 /* Haus */
-.house svg{width:100%;height:auto;display:block}
+.house svg{width:100%;height:auto;display:block;overflow:visible}
+.zone{transition:transform .9s cubic-bezier(.3,1.5,.5,1);transform-box:fill-box;transform-origin:50% 100%}
+.zone .fill{transition:fill .6s,opacity .2s}
+.zone text{transition:fill .6s}
+.crack{fill:none;stroke:var(--paper);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .5s;pointer-events:none}
+.zone.broken .crack{opacity:1}
+.zone.broken .fill{fill:var(--ruin)!important}
+.zone.broken text{fill:var(--ruin-ink)!important}
+.zone.broken[data-go="rout"]{transform:translate(14px,50px) rotate(-10deg)}
+.zone.broken[data-go="abh"]{transform:translate(-8px,14px) rotate(-7deg)}
+.zone.broken[data-go="doku"]{transform:translate(6px,20px) rotate(5deg)}
+.zone.broken[data-go="kultur"]{transform:translateY(4px) rotate(1.5deg)}
+.rubble polygon{fill:var(--ruin)}
+.rubble{transition:opacity .6s}
+.whole .rubble{opacity:0}
+.repair{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.segs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.seg{height:8px;border-radius:4px;background:var(--line);transition:background .6s}
+.seg.on{background:var(--tc)}
+#repair-text{font-size:.95rem}
+/* Mini-Haus am Rand */
+.mini{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:8;width:150px;
+  background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 12px 10px;box-shadow:0 8px 24px rgba(0,0,0,.16);
+  cursor:pointer;display:flex;flex-direction:column;gap:8px;color:var(--ink);font:inherit;text-align:left}
+.mini:hover{border-color:var(--brand)}
+.mini svg{width:100%;height:auto;display:block;overflow:visible}
+.mini-t{display:flex;justify-content:space-between;gap:6px;font:500 .68rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.mini-t b{color:var(--ink);font-weight:500}
+body[data-page="start"] .mini{display:none}
+body:not([data-page="start"]) main{padding-bottom:200px}
+.mz{transition:transform .9s cubic-bezier(.3,1.5,.5,1);transform-box:fill-box;transform-origin:50% 100%}
+.mz .fill{transition:fill .6s}
+.mz.broken .crack{opacity:1}
+.mz.broken .fill{fill:var(--ruin)!important}
+.mz.broken[data-part="rout"]{transform:translate(14px,50px) rotate(-10deg)}
+.mz.broken[data-part="abh"]{transform:translate(-8px,14px) rotate(-7deg)}
+.mz.broken[data-part="doku"]{transform:translate(6px,20px) rotate(5deg)}
+.mz.broken[data-part="kultur"]{transform:translateY(4px) rotate(1.5deg)}
+.mini.pulse{animation:minipulse .8s ease}
+@keyframes minipulse{40%{transform:scale(1.1)}}
+@media (max-width:760px){.mini{width:92px;padding:7px;gap:4px}.mini-t span:first-child{display:none}}
+@media (prefers-reduced-motion:reduce){.mini.pulse{animation:none}}
+#repair-text strong{font-family:var(--display)}
 .zone{cursor:pointer}
 .zone .fill{transition:opacity .2s}
 .zone:hover .fill,.zone:focus .fill{opacity:.85}
@@ -222,15 +264,17 @@ footer .label{color:var(--on-brand);opacity:.75}
       </div>
     </div>
     <div class="sheet house">
-      <span class="label">Klicken Sie auf ein Bauteil</span>
+      <span class="label">Zustand nach Frau Meiers Ausfall · Bauteil anklicken</span>
       <svg viewBox="0 0 420 380" role="img" aria-label="Wissenshaus mit Dach, zwei Säulen und Fundament">
         <g class="zone" tabindex="0" role="button" data-go="rout" aria-label="Dach: Motivation und Routinen">
           <polygon class="fill" points="210,18 400,120 20,120" style="fill:var(--c-rout)"/>
+          <path class="crack" d="M150,62 L170,84 L158,100 L176,120 M262,68 L248,90 L264,108 L256,120"/>
           <text x="210" y="88" text-anchor="middle" style="fill:var(--on-part)" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="19">Routinen &amp; Motivation</text>
           <text x="210" y="108" text-anchor="middle" style="fill:var(--on-part)" font-family="IBM Plex Mono, monospace" font-size="10" opacity=".85">DACH · HÄLT ES DAUERHAFT</text>
         </g>
         <g class="zone" tabindex="0" role="button" data-go="abh" aria-label="Säule: Abhängigkeiten reduzieren">
           <rect class="fill" x="56" y="132" width="120" height="166" style="fill:var(--c-abh)"/>
+          <path class="crack" d="M84,132 L100,168 L88,196 L106,236 M150,246 L136,272 L152,298"/>
           <text x="116" y="205" text-anchor="middle" style="fill:var(--on-part)" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">Abhängig-</text>
           <text x="116" y="225" text-anchor="middle" style="fill:var(--on-part)" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">keiten</text>
           <text x="116" y="245" text-anchor="middle" style="fill:var(--on-part)" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">reduzieren</text>
@@ -238,6 +282,7 @@ footer .label{color:var(--on-brand);opacity:.75}
         </g>
         <g class="zone" tabindex="0" role="button" data-go="doku" aria-label="Säule: Dokumentation und Wissensdatenbank">
           <rect class="fill" x="244" y="132" width="120" height="166" style="fill:var(--c-doku)"/>
+          <path class="crack" d="M338,132 L322,164 L338,192 L322,232 M266,258 L282,280 L270,298"/>
           <text x="304" y="205" text-anchor="middle" style="fill:var(--on-part)" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">Doku &amp;</text>
           <text x="304" y="225" text-anchor="middle" style="fill:var(--on-part)" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">Wissens-</text>
           <text x="304" y="245" text-anchor="middle" style="fill:var(--on-part)" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16">datenbank</text>
@@ -245,10 +290,20 @@ footer .label{color:var(--on-brand);opacity:.75}
         </g>
         <g class="zone" tabindex="0" role="button" data-go="kultur" aria-label="Fundament: Unternehmenskultur">
           <rect class="fill" x="20" y="310" width="380" height="56" style="fill:var(--c-kultur)"/>
+          <path class="crack" d="M118,310 L130,330 L120,346 L134,366 M290,310 L278,334 L292,366"/>
           <text x="210" y="336" text-anchor="middle" style="fill:var(--on-part)" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="18">Kultur des Teilens</text>
           <text x="210" y="354" text-anchor="middle" style="fill:var(--on-part)" font-family="IBM Plex Mono, monospace" font-size="10" opacity=".85">FUNDAMENT · TRÄGT ALLES</text>
         </g>
+        <g class="rubble" aria-hidden="true">
+          <polygon points="2,378 14,366 26,371 30,378"/><polygon points="34,378 40,370 50,378"/>
+          <polygon points="372,378 380,368 392,372 398,378"/><polygon points="402,378 410,366 420,378"/>
+        </g>
       </svg>
+      <div class="repair">
+        <div class="segs" aria-hidden="true"><span class="seg" data-part="kultur" style="--tc:var(--c-kultur)"></span><span class="seg" data-part="abh" style="--tc:var(--c-abh)"></span><span class="seg" data-part="doku" style="--tc:var(--c-doku)"></span><span class="seg" data-part="rout" style="--tc:var(--c-rout)"></span></div>
+        <p id="repair-text" role="status"></p>
+        <button class="link" id="repair-reset" hidden>Haus zurücksetzen</button>
+      </div>
     </div>
   </div>
 
@@ -418,12 +473,12 @@ function checklist(id,items,color){
   let was=false;
   const upd=(user)=>{const n=box.querySelectorAll("input:checked").length;prog.textContent=n+" von "+items.length+" erledigt";
     const all=n===items.length;done.hidden=!all;
-    if(all){done.innerHTML='<span class="pop">'+pick()+'</span><span>Alle '+items.length+' Punkte erfüllt. Gut gemacht!</span>';if(user&&!was)burst(done)}
+    if(all){done.innerHTML='<span class="pop">'+pick()+'</span><span>Alle '+items.length+' Punkte erfüllt. Gut gemacht!'+(chapters[id]?' Das Bauteil „'+chapters[id].title+'“ ist repariert. <button class="link" data-go="start">Zum Haus →</button>':'')+'</span>';if(user&&!was)burst(done)}
     was=all};
   items.forEach((t,i)=>{
     const l=document.createElement("label");const cb=document.createElement("input");
     cb.type="checkbox";cb.id=id+"-"+i;cb.checked=!!saved[i];
-    cb.addEventListener("change",()=>{store("wh-"+id,[...box.querySelectorAll("input")].map(x=>x.checked));upd(true)});
+    cb.addEventListener("change",()=>{store("wh-"+id,[...box.querySelectorAll("input")].map(x=>x.checked));upd(true);if(chapters[id])updateMini(true)});
     const s=document.createElement("span");s.textContent=t;l.append(cb,s);box.append(l)});
   box.append(done);upd(false);return [box,prog];
 }
@@ -478,11 +533,50 @@ notfall.forEach(([t,col,items],i)=>{
   s.innerHTML=`<span class="label">Schritt ${i+1}</span><span class="when">${t}</span>`;
   const [box,prog]=checklist("notfall"+i,items);s.append(prog,box);nl.append(s)});
 
+const parts=["kultur","abh","doku","rout"];
+function isDone(k){const v=store("wh-"+k)||[];return chapters[k].checks.every((_,i)=>v[i])}
+let lastCount=null;
+function updateHouse(animate){
+  const ok=parts.filter(isDone),n=ok.length;
+  parts.forEach(k=>{document.querySelector('.zone[data-go="'+k+'"]').classList.toggle("broken",!ok.includes(k));
+    document.querySelector('.seg[data-part="'+k+'"]').classList.toggle("on",ok.includes(k))});
+  document.querySelector(".house svg").classList.toggle("whole",n===4);
+  const t=document.getElementById("repair-text");
+  if(n===0)t.innerHTML="<strong>Das Haus ist eingestürzt.</strong> Jeder vollständig erledigte Selbstcheck repariert ein Bauteil.";
+  else if(n<4)t.innerHTML="<strong>"+n+" von 4 Bauteilen repariert.</strong> Es fehlen noch: "+parts.filter(k=>!ok.includes(k)).map(k=>chapters[k].title).join(", ")+".";
+  else t.innerHTML="<strong>Das Haus steht wieder.</strong> Mit diesem Konzept hätte die BG Nordtal Frau Meiers Ausfall gut überstanden.";
+  document.getElementById("repair-reset").hidden=n===0;
+  if(animate&&n===4&&lastCount!==null&&lastCount<4)setTimeout(()=>burst(t),700);
+  lastCount=n;
+}
+document.getElementById("repair-reset").addEventListener("click",()=>{
+  parts.forEach(k=>document.querySelectorAll('[data-view="'+k+'"] .check input').forEach(i=>{if(i.checked){i.checked=false;i.dispatchEvent(new Event("change"))}}));
+  updateHouse(true);updateMini(false)});
+const mini=document.createElement("button");mini.className="mini";mini.dataset.go="start";
+mini.innerHTML='<span class="mini-t"><span>Wissenshaus</span><b id="mini-n"></b></span>';
+const msvg=document.querySelector(".house svg").cloneNode(true);
+msvg.removeAttribute("role");msvg.removeAttribute("aria-label");msvg.setAttribute("aria-hidden","true");
+msvg.querySelectorAll("text").forEach(t=>t.remove());
+msvg.querySelectorAll(".zone").forEach(g=>{g.classList.replace("zone","mz");g.dataset.part=g.dataset.go;["data-go","tabindex","role","aria-label"].forEach(a=>g.removeAttribute(a))});
+mini.append(msvg);document.body.append(mini);
+let lastMini=null;
+function updateMini(pulse){
+  const ok=parts.filter(isDone),n=ok.length;
+  parts.forEach(k=>msvg.querySelector('.mz[data-part="'+k+'"]').classList.toggle("broken",!ok.includes(k)));
+  msvg.classList.toggle("whole",n===4);
+  document.getElementById("mini-n").textContent=n+"/4";
+  mini.setAttribute("aria-label","Zum Wissenshaus: "+n+" von 4 Bauteilen repariert");
+  if(pulse&&lastMini!==null&&n!==lastMini){mini.classList.remove("pulse");void mini.offsetWidth;mini.classList.add("pulse");if(n===4)setTimeout(()=>burst(mini),600)}
+  lastMini=n;
+}
+updateHouse(false);updateMini(false);
 function go(v){
+  document.body.dataset.page=v;
   document.querySelectorAll(".view").forEach(s=>s.hidden=s.dataset.view!==v);
   document.querySelectorAll("nav button").forEach(b=>b.toggleAttribute("aria-current",b.dataset.go===v));
   document.querySelectorAll("nav button[aria-current]").forEach(b=>b.setAttribute("aria-current","page"));
   window.scrollTo({top:0});store("wh-view",v);
+  if(v==="start")requestAnimationFrame(()=>requestAnimationFrame(()=>updateHouse(true)));
 }
 document.addEventListener("click",e=>{
   const c=e.target.closest("[data-cite]");
