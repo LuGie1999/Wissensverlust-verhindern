@@ -12,7 +12,7 @@
 /* Layout: Bauplan-Ästhetik – Startseite mit klickbarem Hausquerschnitt, darunter Kapitelseiten im gleichen Raster */
 :root{
   --bg:#F6F9FC; --paper:#E7EFF8; --ink:#0B2545; --muted:#45597A; --line:#C4D4E7;
-  --brand:#00519C; --on-brand:#FFFFFF; --on-part:#FFFFFF; --ruin:#A9B6C6; --ruin-ink:#0B2545;
+  --brand:#00519C; --on-brand:#FFFFFF; --on-part:#FFFFFF; --ruin:#A9B6C6; --ruin-ink:#0B2545; --bad:#B42318; --bad-soft:#FBE4E1; --good:#1E7B45; --good-soft:#DFF3E6;
   --accent:#C98A00; --accent-soft:#FBEFC9;
   --c-kultur:#2E7D4F; --c-abh:#00808A; --c-doku:#6B4C9A; --c-rout:#C2412D;
   --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
@@ -21,12 +21,12 @@
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#08172B; --paper:#10253F; --ink:#E6EEF7; --muted:#A0B3CC; --line:#24405F;
-  --brand:#00519C; --on-brand:#FFFFFF; --on-part:#08172B; --ruin:#34485F; --ruin-ink:#E6EEF7;
+  --brand:#00519C; --on-brand:#FFFFFF; --on-part:#08172B; --ruin:#34485F; --ruin-ink:#E6EEF7; --bad:#F07A6E; --bad-soft:#3B1D1F; --good:#5CC98A; --good-soft:#15302A;
   --accent:#F2C14E; --accent-soft:#3A3115;
   --c-kultur:#62B98A; --c-abh:#3FBCC4; --c-doku:#AE93DA; --c-rout:#EE8068; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#08172B; --paper:#10253F; --ink:#E6EEF7; --muted:#A0B3CC; --line:#24405F;
-  --brand:#00519C; --on-brand:#FFFFFF; --on-part:#08172B; --ruin:#34485F; --ruin-ink:#E6EEF7;
+  --brand:#00519C; --on-brand:#FFFFFF; --on-part:#08172B; --ruin:#34485F; --ruin-ink:#E6EEF7; --bad:#F07A6E; --bad-soft:#3B1D1F; --good:#5CC98A; --good-soft:#15302A;
   --accent:#F2C14E; --accent-soft:#3A3115;
   --c-kultur:#62B98A; --c-abh:#3FBCC4; --c-doku:#AE93DA; --c-rout:#EE8068; color-scheme:dark}
 
@@ -39,10 +39,10 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .bar{display:flex;align-items:center;gap:16px;padding-block:12px}
 .brand{font-family:var(--display);font-weight:800;font-size:1.15rem;letter-spacing:-.01em;white-space:nowrap;background:none;border:0;color:var(--on-brand);cursor:pointer;padding:0}
 .brand span{color:var(--accent-soft)}
-nav{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;min-width:0;padding:3px}
+nav{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;min-width:0;padding:3px}
 nav::-webkit-scrollbar{display:none}
 nav button{font:500 .78rem var(--mono);letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;
-  background:transparent;border:1px solid rgba(255,255,255,.45);color:var(--on-brand);padding:6px 11px;border-radius:999px;cursor:pointer;transition:filter .15s}
+  background:transparent;border:1px solid rgba(255,255,255,.45);color:var(--on-brand);padding:6px 9px;border-radius:999px;cursor:pointer;transition:filter .15s}
 nav button[data-part]{background:var(--pc);border-color:var(--pc);color:var(--on-part);font-weight:500}
 nav button:hover{filter:brightness(1.12)}
 nav button[aria-current="page"]{box-shadow:0 0 0 2px var(--brand),0 0 0 4px var(--on-brand)}
@@ -86,6 +86,36 @@ p{margin:0;max-width:65ch}
 .seg{height:8px;border-radius:4px;background:var(--line);transition:background .6s}
 .seg.on{background:var(--tc)}
 #repair-text{font-size:.95rem}
+/* Fallbeispiel */
+.fstate{display:grid;grid-template-columns:1fr auto;gap:12px 20px;align-items:center;padding:16px 18px;border-radius:8px;background:var(--st-soft);border:1px solid var(--st)}
+.fstate > *{min-width:0}
+.fstate .big{font:800 1.3rem var(--display);color:var(--ink)}
+.fstate .fsegs{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.fseg{height:8px;border-radius:4px;background:var(--line);transition:background .6s}
+.fseg.on{background:var(--tc)}
+.tl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.ev{display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:start}
+.ev > *{min-width:0}
+.ev .when{font:800 1.05rem var(--display);padding-top:18px;font-variant-numeric:tabular-nums}
+.ev .card{background:var(--paper);border:1px solid var(--line);border-left:5px solid var(--st,var(--line));border-radius:6px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;transition:border-color .6s}
+.ev .card.fade{animation:evfade .6s ease}
+@keyframes evfade{from{opacity:.2;transform:translateX(6px)}to{opacity:1;transform:none}}
+.ev .top{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.state{display:inline-flex;align-items:center;gap:6px;font:500 .72rem var(--mono);letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--st-soft);color:var(--ink);border:1px solid var(--st)}
+.state::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--st)}
+.isbad{--st:var(--bad);--st-soft:var(--bad-soft)}
+.isgood{--st:var(--good);--st-soft:var(--good-soft)}
+.ismid{--st:var(--accent);--st-soft:var(--accent-soft)}
+.isneutral{--st:var(--brand);--st-soft:var(--paper)}
+.ev .why{font-size:.9rem;color:var(--muted)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.metric{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.metric .v{font:800 2rem var(--display);font-variant-numeric:tabular-nums;line-height:1.1}
+.metric .l{font-size:.88rem;color:var(--muted)}
+.metric .d{font:500 .72rem var(--mono);color:var(--muted)}
+.verdict{padding:14px 16px;border-radius:6px;background:var(--st-soft);border-left:5px solid var(--st)}
+@media (max-width:760px){.ev{grid-template-columns:1fr;gap:4px}.ev .when{padding-top:0}.metrics{grid-template-columns:repeat(2,1fr)}}
+@media (prefers-reduced-motion:reduce){.ev .card.fade{animation:none}}
 /* Mini-Haus am Rand */
 .mini{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:8;width:150px;
   background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 12px 10px;box-shadow:0 8px 24px rgba(0,0,0,.16);
@@ -237,6 +267,7 @@ footer .label{color:var(--on-brand);opacity:.75}
     <button class="brand" data-go="start">Wissens<span>haus</span></button>
     <nav aria-label="Kapitel">
       <button data-go="start">Start</button>
+      <button data-go="fall">Fallbeispiel</button>
       <button data-go="kultur" data-part style="--pc:var(--c-kultur)">Kultur</button>
       <button data-go="abh" data-part style="--pc:var(--c-abh)">Abhängigkeiten</button>
       <button data-go="doku" data-part style="--pc:var(--c-doku)">Dokumentation</button>
@@ -261,6 +292,7 @@ footer .label{color:var(--on-brand);opacity:.75}
         <span class="label">Ausgangsfall</span>
         <strong>Montag, 7:45 Uhr. Frau Meier meldet sich ab – auf unbestimmte Zeit.</strong>
         <p>Seit 19 Jahren bearbeitet sie in der fiktiven Berufsgenossenschaft Nordtal die Berufskrankheiten-Verfahren mit Auslandsbezug. Niemand sonst kennt die Sonderfälle, die Ansprechpartner bei Gutachtern und anderen Unfallversicherungsträgern oder den Ablageort der Altakten. Ab heute stehen 140 offene Vorgänge still.</p>
+        <button class="link" data-go="fall" style="align-self:flex-start">Wie geht es weiter? Zum Fallbeispiel →</button>
       </div>
     </div>
     <div class="sheet house">
@@ -322,6 +354,18 @@ footer .label{color:var(--on-brand);opacity:.75}
     <div class="sheet" style="display:flex;flex-direction:column;gap:8px"><span class="label">Ohne eine Säule</span><p>Nur Köpfe oder nur Dokumente: Fällt die eine Quelle aus, gibt es keinen Ersatz.</p></div>
     <div class="sheet" style="display:flex;flex-direction:column;gap:8px"><span class="label">Ohne Dach</span><p>Die Wissensdatenbank veraltet nach wenigen Monaten und verliert das Vertrauen der Nutzer.</p></div>
   </div>
+</section>
+
+<!-- FALLBEISPIEL -->
+<section class="view" data-view="fall" hidden>
+  <div class="chap-head" style="--tc:var(--brand)">
+    <span class="label">Fallbeispiel · BG Nordtal (fiktiv)</span>
+    <h1>Der Ausfall von Frau Meier</h1>
+    <p class="lead">Drei Monate nach dem Ausfall: Wie es der BG Nordtal ergeht, hängt davon ab, welche Bauteile des Wissenshauses stehen. Jeder vollständig erledigte Selbstcheck repariert ein Bauteil und verändert den Verlauf.</p>
+  </div>
+  <div class="fstate" id="fall-state"></div>
+  <ol class="tl" id="fall-tl"></ol>
+  <div class="sheet block" id="fall-bilanz"></div>
 </section>
 
 <!-- Kapitelvorlage wird per JS befüllt -->
@@ -551,7 +595,7 @@ function updateHouse(animate){
 }
 document.getElementById("repair-reset").addEventListener("click",()=>{
   parts.forEach(k=>document.querySelectorAll('[data-view="'+k+'"] .check input').forEach(i=>{if(i.checked){i.checked=false;i.dispatchEvent(new Event("change"))}}));
-  updateHouse(true);updateMini(false)});
+  updateHouse(true);updateMini(false);renderFall()});
 const mini=document.createElement("button");mini.className="mini";mini.dataset.go="start";
 mini.innerHTML='<span class="mini-t"><span>Wissenshaus</span><b id="mini-n"></b></span>';
 const msvg=document.querySelector(".house svg").cloneNode(true);
@@ -570,8 +614,57 @@ function updateMini(pulse){
   lastMini=n;
 }
 updateHouse(false);updateMini(false);
+const fallEvents=[
+  {when:"Montag",part:null,title:"Frau Meier fällt aus",text:"Um 7:45 Uhr meldet sich Frau Meier auf unbestimmte Zeit ab. 140 offene BK-Verfahren mit Auslandsbezug liegen auf ihrem Tisch."},
+  {when:"Tag 1",part:"abh",
+   bad:["Niemand kann übernehmen","Die eingetragene Vertretung hat noch nie ein BK-Verfahren mit Auslandsbezug bearbeitet. Anrufe von Versicherten und ausländischen Trägern laufen ins Leere."],
+   good:["Das Tandem übernimmt","Ihr Tandempartner bearbeitet seit einem Jahr jeden Monat einen Fall gemeinsam mit Frau Meier. Er übernimmt noch am selben Tag die dringenden Vorgänge."]},
+  {when:"Woche 1",part:"doku",
+   bad:["Die Suche nach dem Wissen beginnt","Unterlagen liegen in Frau Meiers persönlichem Laufwerk und Postfach. Sonderregelungen und Ansprechpartner stehen nirgends. Erste Fristen für Stellungnahmen verstreichen."],
+   good:["Das Wiki trägt","Die Wiki-Seite zum Verfahren beschreibt den Ablauf, die 12 häufigsten Sonderfälle und alle Ansprechpartner bei Gutachtern und anderen Unfallversicherungsträgern. Keine Frist geht verloren."]},
+  {when:"Woche 3",part:"kultur",
+   bad:["Jeder kämpft für sich","Einige Kolleginnen und Kollegen kennen Teile der Verfahren, haben aber keine Zeit oder behalten ihr Wissen für sich. Die Führungskraft erfährt erst durch eine Beschwerde, wie ernst die Lage ist."],
+   good:["Das Team hält zusammen","In einer kollegialen Fallberatung teilen alle ihr Teilwissen offen. Die Führungskraft hat dafür Zeit freigegeben und verteilt die Fälle neu."]},
+  {when:"Monat 2",part:"rout",
+   bad:["Der Dokumentation traut niemand","Die wenigen Notizen sind zwei Jahre alt und passen nicht mehr zur aktuellen Rechtslage. Neue Erkenntnisse aus der Vertretung werden nirgends festgehalten."],
+   good:["Das Wissen bleibt aktuell","Dank der festen Freitagsviertelstunde sind die Seiten aktuell. Was die Vertretung neu lernt, ergänzt sie direkt im Wiki."]}
+];
+const partLabel={kultur:"Fundament · Kultur",abh:"Säule 1 · Abhängigkeiten",doku:"Säule 2 · Dokumentation",rout:"Dach · Routinen"};
+const fallMetrics=[
+  ["Offene Vorgänge nach 3 Monaten",[212,181,150,118,86]],
+  ["Versäumte Fristen",[23,15,9,4,0]],
+  ["Beschwerden von Versicherten",[17,11,7,3,1]],
+  ["Einarbeitung der Vertretung in Wochen",[16,12,9,5,1]]
+];
+let fallShown=null;
+function renderFall(){
+  const ok=parts.filter(isDone),n=ok.length,key=ok.join(",");
+  const st=n===0?"isbad":n<4?"ismid":"isgood";
+  const head=n===0?"Ohne Wissensmanagement":n<4?n+" von 4 Bauteilen stehen":"Mit dem Wissenshaus";
+  const sub=n===0?"Das Haus ist eingestürzt. So läuft der Fall ohne jede Maßnahme.":n<4?"Einige Probleme sind gelöst, andere eskalieren weiter.":"Alle Bauteile stehen. So läuft der Fall mit dem Konzept.";
+  const fs=document.getElementById("fall-state");fs.className="fstate "+st;
+  fs.innerHTML=`<div class="col"><span class="big">${head}</span><span>${sub}</span></div>${n<4?'<button class="btn" data-go="start">Haus reparieren</button>':''}
+    <div class="fsegs">${parts.map(k=>`<span class="fseg${ok.includes(k)?" on":""}" style="--tc:var(--c-${k})"></span>`).join("")}</div>`;
+  const anim=fallShown!==null&&fallShown!==key;
+  document.getElementById("fall-tl").innerHTML=fallEvents.map(e=>{
+    if(!e.part)return `<li class="ev"><span class="when">${e.when}</span><div class="card isneutral"><div class="top"><span class="state">Ausgangslage</span></div><h3>${e.title}</h3><p>${e.text}</p></div></li>`;
+    const g=ok.includes(e.part),[t,x]=g?e.good:e.bad;
+    return `<li class="ev"><span class="when">${e.when}</span><div class="card ${g?"isgood":"isbad"}${anim?" fade":""}">
+      <div class="top"><span class="state">${g?"Gelöst":"Problem"}</span><button class="tag" data-go="${e.part}" style="--tc:var(--c-${e.part})">${partLabel[e.part]}</button></div>
+      <h3>${t}</h3><p>${x}</p>
+      <span class="why">${g?"Weil dieses Bauteil steht.":"Hätte verhindert werden können: <button class=\"link\" data-go=\""+e.part+"\">"+chapters[e.part].title+" →</button>"}</span></div></li>`}).join("");
+  const verdict=n===0?["Katastrophe","Nach drei Monaten ist der Rückstau größer als am ersten Tag. Versicherte warten auf Entscheidungen, Fristen sind versäumt, die Vertretung ist überlastet."]
+    :n<4?["Schadensbegrenzung","Die reparierten Bauteile mildern die Folgen. Solange ein Teil fehlt, bleiben Lücken, durch die Wissen verloren geht."]
+    :["Keine Katastrophe","Der Ausfall ist spürbar, aber beherrschbar. Der Rückstau sinkt, keine Frist ist versäumt, und die Vertretung arbeitet nach einer Woche sicher."];
+  document.getElementById("fall-bilanz").innerHTML=`<span class="label">Monat 3 · Bilanz</span><h2>${verdict[0]}</h2>
+    <div class="metrics">${fallMetrics.map(([l,v])=>`<div class="metric"><span class="v">${v[n]}</span><span class="l">${l}</span>${n>0?`<span class="d">ohne Konzept: ${v[0]}</span>`:""}</div>`).join("")}</div>
+    <div class="verdict ${st}"><p>${verdict[1]}</p></div>`;
+  fallShown=key;
+}
+renderFall();
 function go(v){
   document.body.dataset.page=v;
+  if(v==="fall")renderFall();
   document.querySelectorAll(".view").forEach(s=>s.hidden=s.dataset.view!==v);
   document.querySelectorAll("nav button").forEach(b=>b.toggleAttribute("aria-current",b.dataset.go===v));
   document.querySelectorAll("nav button[aria-current]").forEach(b=>b.setAttribute("aria-current","page"));
@@ -583,7 +676,7 @@ document.addEventListener("click",e=>{
   if(c){go("quellen");const r=document.getElementById(c.dataset.cite);if(r){r.scrollIntoView({block:"center"});r.classList.add("flash");setTimeout(()=>r.classList.remove("flash"),1600)}return}
   const t=e.target.closest("[data-go]");if(t)go(t.dataset.go)});
 document.querySelectorAll(".zone").forEach(z=>z.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go(z.dataset.go)}}));
-const h=location.hash.slice(1);go(chapters[h]||["fahrplan","notfall","quellen","start"].includes(h)?h:"start");
+const h=location.hash.slice(1);go(chapters[h]||["fall","fahrplan","notfall","quellen","start"].includes(h)?h:"start");
 </script>
 </body>
 </html>
