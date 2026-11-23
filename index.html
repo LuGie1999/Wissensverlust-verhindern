@@ -136,15 +136,37 @@ p{margin:0;max-width:65ch}
 .bs-line{fill:var(--ink);font:700 15px var(--mono)}
 .bs-wheel{fill:var(--ink);stroke:var(--muted);stroke-width:4}
 /* Grundzustand = Endbild; die Animation spielt vom Anfang dorthin */
-.bs-bus{transform:translateX(760px);animation:bsBus 5.2s cubic-bezier(.4,0,.6,1) .4s both}
-.bs-meier{opacity:0;animation:bsMeier 5.2s linear .4s both}
-.bs-papers{opacity:1;animation:bsPapers 5.2s ease-out .4s both}
-.bs-cap{opacity:1;animation:bsCap 5.2s ease .4s both}
+.bs-bus{transform:translateX(760px)}
+.bs-meier{opacity:0}
+.bs-papers{opacity:1}
+.bs-cap{opacity:1}
+/* Startbild, solange nicht abgespielt wird */
+.busbox.idle .bs-bus{transform:translateX(-240px)}
+.busbox.idle .bs-meier{opacity:1}
+.busbox.idle .bs-papers{opacity:0}
+.busbox.idle .bs-cap{opacity:0}
+/* Abspielen: automatisch oder per Klick, auch bei reduzierter Bewegung */
+.busbox.play .bs-bus{animation:bsBus 5.2s cubic-bezier(.4,0,.6,1) .4s both}
+.busbox.play .bs-meier{animation:bsMeier 5.2s linear .4s both}
+.busbox.play .bs-papers{animation:bsPapers 5.2s ease-out .4s both}
+.busbox.play .bs-cap{animation:bsCap 5.2s ease .4s both}
+/* Wissens-Geist */
+.bs-gbody{fill:var(--paper);stroke:var(--muted);stroke-width:2;fill-opacity:.92}
+.bs-geye{fill:var(--ink)}
+.bs-glabel{fill:var(--brand);font:800 16px var(--display)}
+.bs-bit{fill:var(--brand);font:800 18px var(--display)}
+.bs-ghost,.bs-bit{opacity:0}
+.busbox.play .bs-ghost{animation:bsGhost 5.2s ease-out .4s both}
+.busbox.play .bs-bit{animation:bsBit 5.2s ease-out .4s both}
+.busbox.play .bs-bit.b2{animation-delay:.65s}
+.busbox.play .bs-bit.b3{animation-delay:.85s}
+.busbox.play .bs-bit.b4{animation-delay:1.05s}
+@keyframes bsGhost{0%,46%{opacity:0;transform:translate(0,34px)}53%{opacity:.95;transform:translate(0,0)}63%{transform:translate(-9px,-36px)}74%{opacity:.85;transform:translate(9px,-72px)}88%,100%{opacity:0;transform:translate(-4px,-120px)}}
+@keyframes bsBit{0%,47%{opacity:0;transform:translate(0,20px)}55%{opacity:1;transform:translate(0,0)}82%,100%{opacity:0;transform:translate(6px,-95px)}}
 @keyframes bsBus{0%{transform:translateX(-240px)}36%{transform:translateX(250px)}58%{transform:translateX(250px)}100%{transform:translateX(760px)}}
 @keyframes bsMeier{0%,44%{opacity:1}47%,100%{opacity:0}}
 @keyframes bsPapers{0%,56%{opacity:0;transform:translateY(-40px)}70%{opacity:1;transform:translateY(-6px)}100%{opacity:1;transform:translateY(0)}}
 @keyframes bsCap{0%,85%{opacity:0}100%{opacity:1}}
-@media (prefers-reduced-motion:reduce){.busscene *{animation:none!important}.bs-cap{animation:none!important}}
 /* Mini-Haus am Rand */
 .mini{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:8;width:150px;
   background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 12px 10px;box-shadow:0 8px 24px rgba(0,0,0,.16);
@@ -557,7 +579,7 @@ const chapters = {
   <div class="sheet block">
     <div class="bus"><span class="num">1</span><div class="col"><span class="label">Bus-Faktor</span><p>Wie viele Personen müssten ausfallen, bis ein Prozess stillsteht? Liegt der Wert bei 1, hängt der Prozess an einer einzigen Person. Ziel dieser Säule ist, den Bus-Faktor für jeden kritischen Prozess auf mindestens 2 zu bringen.</p><p class="sub">Der Name stammt aus der Softwareentwicklung: Wie viele Leute müssten „vom Bus mitgenommen“ werden, bis nichts mehr geht?</p></div></div>
     <div class="busbox">
-      <svg class="busscene" viewBox="0 0 720 230" role="img" aria-label="Animation: Ein Bus hält an der Haltestelle und nimmt Frau Meier mit. Zurück bleiben nur ihre Akten.">
+      <svg class="busscene" viewBox="0 0 720 230" role="img" aria-label="Animation: Ein Bus hält an der Haltestelle und nimmt Frau Meier mit. Ihr Wissen schwebt als Geist davon, zurück bleiben nur ihre Akten.">
         <line x1="0" y1="200" x2="720" y2="200" class="bs-road"/>
         <line x1="0" y1="214" x2="720" y2="214" class="bs-lane"/>
         <g class="bs-stop"><line x1="420" y1="200" x2="420" y2="92" class="bs-pole"/><circle cx="420" cy="80" r="18" class="bs-sign"/><text x="420" y="87" text-anchor="middle" class="bs-h">H</text></g>
@@ -569,6 +591,13 @@ const chapters = {
           <line x1="323" y1="161" x2="321" y2="198" class="bs-leg"/><line x1="337" y1="161" x2="339" y2="198" class="bs-leg"/>
           <rect x="342" y="126" width="22" height="26" rx="3" class="bs-files"/>
         </g>
+        <g class="bs-ghost">
+          <text x="330" y="40" text-anchor="middle" class="bs-glabel">Wissen</text>
+          <path d="M304,104 L304,70 A26,26 0 0 1 356,70 L356,104 L347,96 L339,104 L330,96 L321,104 L313,96 Z" class="bs-gbody"/>
+          <ellipse cx="320" cy="72" rx="4" ry="6" class="bs-geye"/><ellipse cx="340" cy="72" rx="4" ry="6" class="bs-geye"/>
+          <ellipse cx="330" cy="88" rx="5" ry="4" class="bs-geye"/>
+        </g>
+        <g class="bs-bits"><text x="296" y="96" class="bs-bit b1">§</text><text x="364" y="92" class="bs-bit b2">?</text><text x="316" y="110" class="bs-bit b3">BK</text><text x="350" y="112" class="bs-bit b4">§</text></g>
         <g class="bs-bus">
           <rect x="0" y="104" width="200" height="82" rx="14" class="bs-body-bus"/>
           <rect x="16" y="116" width="34" height="30" rx="4" class="bs-win"/><rect x="58" y="116" width="34" height="30" rx="4" class="bs-win"/><rect x="100" y="116" width="34" height="30" rx="4" class="bs-win"/><rect x="146" y="116" width="40" height="44" rx="4" class="bs-win"/>
@@ -576,7 +605,7 @@ const chapters = {
           <circle cx="42" cy="188" r="15" class="bs-wheel"/><circle cx="160" cy="188" r="15" class="bs-wheel"/>
         </g>
       </svg>
-      <div class="busfoot"><p class="bs-cap"><b>Bus-Faktor 1:</b> Frau Meier ist weg. Ihre Akten sind noch da, aber niemand versteht sie.</p><button class="link" data-replay>Nochmal abspielen</button></div>
+      <div class="busfoot"><p class="bs-cap"><b>Bus-Faktor 1:</b> Frau Meier ist weg, und ihr Wissen ist mit ihr verschwunden. Zurück bleiben Akten, die niemand versteht.</p><button class="link" data-replay>Animation abspielen</button></div>
     </div>
   </div>
   <div class="block">
@@ -851,11 +880,13 @@ function renderFall(){
   fallShown=key;
 }
 renderFall();
-function replayBus(){const old=document.querySelector(".busbox");if(!old)return;const n=old.cloneNode(true);old.replaceWith(n)}
-document.addEventListener("click",e=>{if(e.target.closest("[data-replay]"))replayBus()});
+function replayBus(force){const old=document.querySelector(".busbox");if(!old)return;
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const n=old.cloneNode(true);n.classList.remove("play","idle");n.classList.add(force||!reduce?"play":"idle");old.replaceWith(n)}
+document.addEventListener("click",e=>{if(e.target.closest("[data-replay]"))replayBus(true)});
 function go(v){
   document.body.dataset.page=v;
-  if(v==="abh")requestAnimationFrame(replayBus);
+  if(v==="abh")requestAnimationFrame(()=>replayBus(false));
   if(v==="fall")renderFall();
   document.querySelectorAll(".view").forEach(s=>s.hidden=s.dataset.view!==v);
   document.querySelectorAll("nav button").forEach(b=>b.toggleAttribute("aria-current",b.dataset.go===v));
